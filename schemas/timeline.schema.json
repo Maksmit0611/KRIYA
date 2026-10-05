@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/timeline.schema.json",
+  "title": "KRIYA Timeline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "projectId", "version", "timebase", "durationMs", "tracks"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "projectId": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 0 },
+    "timebase": {
+      "type": "object", "additionalProperties": false, "required": ["fps"],
+      "properties": { "fps": { "type": "number", "exclusiveMinimum": 0, "maximum": 240 } }
+    },
+    "durationMs": { "type": "number", "minimum": 0 },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "kind", "name", "locked", "visible", "muted", "solo", "height", "clips"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["video", "audio", "graphics", "captions"] },
+          "name": { "type": "string", "minLength": 1 },
+          "locked": { "type": "boolean" }, "visible": { "type": "boolean" },
+          "muted": { "type": "boolean" }, "solo": { "type": "boolean" },
+          "height": { "type": "number", "minimum": 32, "maximum": 240 },
+          "clips": {
+            "type": "array",
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["id", "assetId", "timelineStartMs", "sourceStartMs", "sourceDurationMs", "durationMs", "speed", "opacity", "gain", "muted", "transform", "effects", "keyframes"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 }, "assetId": { "type": "string", "minLength": 1 },
+                "timelineStartMs": { "type": "number", "minimum": 0 }, "sourceStartMs": { "type": "number", "minimum": 0 },
+                "sourceDurationMs": { "type": "number", "exclusiveMinimum": 0 }, "durationMs": { "type": "number", "exclusiveMinimum": 0 },
+                "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 16 }, "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+                "gain": { "type": "number", "minimum": 0, "maximum": 4 }, "muted": { "type": "boolean" },
+                "transform": {
+                  "type": "object", "additionalProperties": false, "required": ["x", "y", "scaleX", "scaleY", "rotation"],
+                  "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "scaleX": { "type": "number", "exclusiveMinimum": 0, "maximum": 20 }, "scaleY": { "type": "number", "exclusiveMinimum": 0, "maximum": 20 }, "rotation": { "type": "number" } }
+                },
+                "effects": { "type": "array" }, "keyframes": { "type": "array" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

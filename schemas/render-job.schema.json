@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/render-job.schema.json",
+  "title": "KRIYA Render Job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "projectId", "timelineVersion", "presetId", "status", "progress", "createdAt", "outputAssetId", "idempotencyKey", "attempt", "error"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "projectId": { "type": "string", "minLength": 1 },
+    "timelineVersion": { "type": "integer", "minimum": 0 }, "presetId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["queued", "preparing", "rendering", "encoding", "uploading", "completed", "failed", "cancelled"] },
+    "progress": { "type": "number", "minimum": 0, "maximum": 100 }, "createdAt": { "type": "string", "format": "date-time" },
+    "outputAssetId": { "type": ["string", "null"] }, "idempotencyKey": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "integer", "minimum": 0 }, "error": { "type": ["string", "null"] }
+  }
+}

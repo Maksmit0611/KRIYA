@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/provider.schema.json",
+  "title": "KRIYA Provider Connection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "workspaceId", "providerId", "displayName", "status", "capabilities", "secretReference", "createdAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "workspaceId": { "type": "string", "minLength": 1 },
+    "providerId": { "type": "string", "minLength": 1 }, "displayName": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["pending", "connected", "needs-attention", "disconnected"] },
+    "capabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "secretReference": { "type": ["string", "null"], "description": "Opaque server-side vault handle only; never a credential value." },
+    "createdAt": { "type": "string", "format": "date-time" }, "lastVerifiedAt": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "not": { "anyOf": [{ "required": ["apiKey"] }, { "required": ["accessToken"] }, { "required": ["refreshToken"] }, { "required": ["secret"] }] }
+}

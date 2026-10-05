@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/project.schema.json",
+  "title": "KRIYA Project",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "workspaceId", "name", "createdAt", "updatedAt", "settings", "timelineId", "activeVersion"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" }, "id": { "type": "string", "minLength": 1 },
+    "workspaceId": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "createdAt": { "type": "string", "format": "date-time" }, "updatedAt": { "type": "string", "format": "date-time" },
+    "timelineId": { "type": "string", "minLength": 1 }, "activeVersion": { "type": "integer", "minimum": 0 },
+    "settings": {
+      "type": "object", "additionalProperties": false, "required": ["width", "height", "fps", "sampleRate", "colorSpace"],
+      "properties": { "width": { "type": "integer", "minimum": 1, "maximum": 7680 }, "height": { "type": "integer", "minimum": 1, "maximum": 4320 }, "fps": { "type": "number", "exclusiveMinimum": 0, "maximum": 240 }, "sampleRate": { "type": "integer", "enum": [44100, 48000, 96000] }, "colorSpace": { "const": "rec709" } }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/edit-command.schema.json",
+  "title": "KRIYA Editing Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["commandId", "op", "projectId", "timelineVersion", "args"],
+  "properties": {
+    "commandId": { "type": "string", "minLength": 1 },
+    "projectId": { "type": "string", "minLength": 1 },
+    "timelineVersion": { "type": "integer", "minimum": 0 },
+    "op": { "enum": ["timeline.insert", "timeline.split", "timeline.trim", "timeline.move", "timeline.rippleDelete", "timeline.duplicate", "timeline.delete", "timeline.setSpeed", "timeline.transform", "timeline.setOpacity", "audio.setGain"] },
+    "args": { "type": "object" }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "op": { "const": "timeline.insert" },
+        "args": {
+          "type": "object", "additionalProperties": false, "required": ["trackId", "assetId", "atMs"],
+          "properties": { "trackId": { "type": "string", "minLength": 1 }, "assetId": { "type": "string", "minLength": 1 }, "atMs": { "type": "number", "minimum": 0 } }
+        }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.split" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "atMs"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "atMs": { "type": "number", "minimum": 0 } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.trim" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "edge", "toMs"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "edge": { "enum": ["start", "end"] }, "toMs": { "type": "number", "minimum": 0 } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.move" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "trackId", "toMs"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "trackId": { "type": "string", "minLength": 1 }, "toMs": { "type": "number", "minimum": 0 } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.rippleDelete" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["trackIds", "startMs", "endMs", "preserveSync"], "properties": { "trackIds": { "type": "array", "items": { "type": "string" } }, "startMs": { "type": "number", "minimum": 0 }, "endMs": { "type": "number", "minimum": 0 }, "preserveSync": { "type": "boolean" } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.duplicate" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "toMs": { "type": "number", "minimum": 0 } } }
+      }
+    },
+    {
+      "properties": { "op": { "const": "timeline.delete" }, "args": { "type": "object", "additionalProperties": false, "required": ["clipId"], "properties": { "clipId": { "type": "string", "minLength": 1 } } } }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.setSpeed" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "speed"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 16 } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.transform" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "transform"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "transform": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "scaleX": { "type": "number", "exclusiveMinimum": 0, "maximum": 20 }, "scaleY": { "type": "number", "exclusiveMinimum": 0, "maximum": 20 }, "rotation": { "type": "number" } } } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "timeline.setOpacity" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "opacity"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "opacity": { "type": "number", "minimum": 0, "maximum": 1 } } }
+      }
+    },
+    {
+      "properties": {
+        "op": { "const": "audio.setGain" },
+        "args": { "type": "object", "additionalProperties": false, "required": ["clipId", "gain"], "properties": { "clipId": { "type": "string", "minLength": 1 }, "gain": { "type": "number", "minimum": 0, "maximum": 4 }, "muted": { "type": "boolean" } } }
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/consent.schema.json",
+  "title": "KRIYA Consent Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "subjectId", "workspaceId", "status", "scopes", "ageStatus", "evidenceReference", "verifiedBy", "createdAt", "revokedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "subjectId": { "type": "string", "minLength": 1 }, "workspaceId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["unknown", "pending", "granted", "revoked", "expired"] },
+    "scopes": { "type": "array", "uniqueItems": true, "items": { "enum": ["likeness-generation", "voice-generation", "editing", "distribution", "adult-content"] } },
+    "ageStatus": { "enum": ["unknown", "verified-adult", "underage"] }, "evidenceReference": { "type": ["string", "null"] },
+    "verifiedBy": { "type": ["string", "null"] }, "createdAt": { "type": "string", "format": "date-time" }, "revokedAt": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "granted" } }, "required": ["status"] }, "then": { "properties": { "evidenceReference": { "type": "string", "minLength": 1 }, "verifiedBy": { "type": "string", "minLength": 1 } } } },
+    { "if": { "properties": { "scopes": { "contains": { "const": "adult-content" } } }, "required": ["scopes"] }, "then": { "properties": { "ageStatus": { "const": "verified-adult" }, "status": { "const": "granted" } } } }
+  ]
+}

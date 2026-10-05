@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/generation-job.schema.json",
+  "title": "KRIYA Generation Job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "workspaceId", "projectId", "kind", "providerId", "modelId", "status", "input", "createdAt", "idempotencyKey", "approvalId", "outputAssetIds", "progress", "error"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "workspaceId": { "type": "string", "minLength": 1 }, "projectId": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["image", "video", "audio", "voice", "motion"] }, "providerId": { "type": "string", "minLength": 1 }, "modelId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["queued", "validating", "running", "post-processing", "completed", "failed", "cancelled"] },
+    "input": { "type": "object", "description": "Validated generation inputs; secrets and credentials forbidden." },
+    "createdAt": { "type": "string", "format": "date-time" }, "idempotencyKey": { "type": "string", "minLength": 1 },
+    "approvalId": { "type": ["string", "null"] }, "outputAssetIds": { "type": "array", "items": { "type": "string" } },
+    "progress": { "type": "number", "minimum": 0, "maximum": 100 }, "error": { "type": ["string", "null"] }
+  },
+  "not": { "anyOf": [{ "required": ["apiKey"] }, { "required": ["accessToken"] }, { "required": ["refreshToken"] }] }
+}

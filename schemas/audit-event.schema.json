@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/audit-event.schema.json",
+  "title": "KRIYA Audit Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "commandId", "op", "actor", "timestamp", "beforeVersion", "afterVersion", "affectedObjectIds"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "commandId": { "type": "string", "minLength": 1 },
+    "op": { "type": "string", "minLength": 1 }, "actor": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" }, "beforeVersion": { "type": "integer", "minimum": 0 },
+    "afterVersion": { "type": "integer", "minimum": 0 }, "affectedObjectIds": { "type": "array", "items": { "type": "string" } },
+    "tool": { "type": "string" }, "input": { "type": "object" }
+  }
+}

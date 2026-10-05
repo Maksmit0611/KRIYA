@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/transcript.schema.json",
+  "title": "KRIYA Transcript",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "assetId", "language", "status", "segments", "createdAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "assetId": { "type": "string", "minLength": 1 },
+    "language": { "type": ["string", "null"] }, "status": { "enum": ["queued", "running", "completed", "failed"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "segments": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["id", "startMs", "endMs", "text"], "properties": { "id": { "type": "string", "minLength": 1 }, "startMs": { "type": "number", "minimum": 0 }, "endMs": { "type": "number", "minimum": 0 }, "text": { "type": "string" }, "speakerId": { "type": ["string", "null"] } }, "allOf": [{ "if": { "required": ["startMs", "endMs"] }, "then": { "properties": { "endMs": { "exclusiveMinimum": 0 } } } }] } }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kriya.local/schemas/asset.schema.json",
+  "title": "KRIYA Asset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "workspaceId", "projectId", "kind", "source", "storageKey", "fileName", "mimeType", "fileSize", "durationMs", "width", "height", "fps", "hasAudio", "createdAt", "metadata", "provenance", "rightsRecordId"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 }, "workspaceId": { "type": "string", "minLength": 1 }, "projectId": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["video", "image", "audio", "generated-video", "generated-image", "voice", "music", "sound-effect", "graphic", "font", "subtitle", "proxy", "render"] },
+    "source": { "enum": ["upload", "generated", "derived"] }, "storageKey": { "type": "string", "minLength": 1 },
+    "fileName": { "type": "string", "minLength": 1 }, "mimeType": { "type": "string", "minLength": 1 }, "fileSize": { "type": "integer", "minimum": 0 },
+    "durationMs": { "type": ["number", "null"], "minimum": 0 }, "width": { "type": ["integer", "null"], "minimum": 1 }, "height": { "type": ["integer", "null"], "minimum": 1 },
+    "fps": { "type": ["number", "null"], "exclusiveMinimum": 0 }, "hasAudio": { "type": ["boolean", "null"] },
+    "createdAt": { "type": "string", "format": "date-time" }, "metadata": { "type": "object" },
+    "provenance": {
+      "type": "object", "additionalProperties": false, "required": ["source", "createdAt"],
+      "properties": { "source": { "enum": ["upload", "generated", "derived"] }, "provider": { "type": "string" }, "model": { "type": "string" }, "prompt": { "type": "string" }, "parentAssetIds": { "type": "array", "items": { "type": "string" } }, "createdAt": { "type": "string", "format": "date-time" } }
+    },
+    "rightsRecordId": { "type": ["string", "null"] }
+  }
+}
