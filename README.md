@@ -20,7 +20,7 @@ The supported local export is a silent browser-generated WebM picture preview—
 
 ## Run locally
 
-Requirements: Bun 1.1+ and a modern browser with IndexedDB.
+Requirements: Bun 1.4.2 (tested with the checked-in lockfile) and a modern browser with IndexedDB.
 
 ```sh
 bun install
