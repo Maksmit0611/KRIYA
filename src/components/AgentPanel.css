@@ -1,0 +1,9 @@
+.agent-panel{width:min(480px,100%)}
+.agent-panel label{display:block;color:#a7a8a7;font:9px var(--mono);margin-bottom:8px}
+.agent-panel input{width:100%;height:38px;background:#232428;border:1px solid #414247;border-radius:4px;color:#eee;padding:0 11px;font:12px var(--display)}
+.agent-panel input:focus{outline:2px solid var(--lime);outline-offset:2px}
+.agent-examples{color:#929396;font:10px var(--mono);line-height:1.6;margin-top:10px}
+.agent-preview{display:grid;gap:8px;background:#24291c;border:1px solid #52623b;border-radius:4px;margin-top:17px;padding:13px;color:#d9e2c9;font-size:11px}
+.agent-preview strong{color:#e2ff94;font-size:12px}
+.agent-error{color:#ffb5a4;font-size:11px;margin-top:13px}
+.agent-panel button:disabled{opacity:.45;cursor:not-allowed;transform:none}

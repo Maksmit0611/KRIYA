@@ -3,7 +3,7 @@ import type { CSSProperties, PointerEvent } from "react";
 import {
   Activity, Check, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, Clapperboard,
   Copy, Download, Eye, EyeOff, Film, Frame, Image as ImageIcon, Layers3, Lock, Maximize2, MoreHorizontal,
-  Music2, Pause, Play, Plus, Redo2, Scissors, Search, Settings2, Trash2, Unlock, Upload, Volume2,
+  Music2, Pause, Play, Plus, Redo2, Scissors, Search, Settings2, Sparkles, Trash2, Unlock, Upload, Volume2,
   VolumeX, X, ZoomIn, ZoomOut, Undo2,
 } from "lucide-react";
 import { useEditor } from "./lib/editor/useEditor";
@@ -12,6 +12,8 @@ import { createEditingCommand } from "./lib/project/types";
 import { getOriginalMedia, saveOriginalMedia } from "./lib/project/storage";
 import { inspectUpload } from "./lib/media/inspect";
 import { getBrowserPreviewDuration } from "./lib/media/previewDuration";
+import { AgentPanel } from "./components/AgentPanel";
+import type { LocalEditProposal } from "./lib/agent/local";
 
 type ToastState = { message: string; error?: boolean };
 type ContextState = { x: number; y: number; clipId: string } | null;
@@ -48,6 +50,7 @@ export default function App() {
   const [contextMenu, setContextMenu] = useState<ContextState>(null);
   const [dragPreview, setDragPreview] = useState<DragPreview>(null);
   const [renderOpen, setRenderOpen] = useState(false);
+  const [agentOpen, setAgentOpen] = useState(false);
   const [renderConfig, setRenderConfig] = useState<RenderConfig>({ resolution: "1080p", frameRate: 30 });
   const [renderProgress, setRenderProgress] = useState<number | null>(null);
   const [renderBusy, setRenderBusy] = useState(false);
@@ -124,7 +127,7 @@ export default function App() {
       else if ((event.key === "Delete" || event.key === "Backspace") && selectedClip) { event.preventDefault(); run({ op: "timeline.delete", args: { clipId: selectedClip.clip.id } }); }
       else if (event.key === "ArrowLeft") setPlayhead((time) => Math.max(0, time - 1000 / state.project.settings.fps));
       else if (event.key === "ArrowRight") setPlayhead((time) => Math.min(timelineDuration, time + 1000 / state.project.settings.fps));
-      else if (event.key === "Escape") { setContextMenu(null); setRenderOpen(false); }
+      else if (event.key === "Escape") { setContextMenu(null); setRenderOpen(false); setAgentOpen(false); }
     };
     window.addEventListener("keydown", keydown);
     return () => window.removeEventListener("keydown", keydown);
@@ -224,6 +227,7 @@ export default function App() {
           <select className="top-select" aria-label="Project version" value={state.timeline.version} onChange={(event) => editor.restoreVersion(Number(event.target.value))}><option value={state.timeline.version}>Version {state.timeline.version} · Current</option>{[...state.versions].reverse().map((version) => <option key={version.version} value={version.version}>{version.name} · {version.label}</option>)}</select>
           <select className="top-select" aria-label="Project aspect ratio" value={`${state.project.settings.width}:${state.project.settings.height}`} onChange={(event) => { const [width, height] = event.target.value.split(":").map(Number); setProjectAspect(width, height); }}><option value="1920:1080">16:9 · 1080p</option><option value="1080:1920">9:16 · Vertical</option><option value="1080:1080">1:1 · Square</option></select>
           <button className="icon-button" title="Download editable project manifest" onClick={exportProjectJson}><Download size={15} /></button>
+          <button className="secondary-button" onClick={() => setAgentOpen(true)}><Sparkles size={14} /> Agent</button>
           <button className="primary-button" onClick={() => setRenderOpen(true)}><Clapperboard size={14} /> Render <ChevronDown size={12} /></button>
         </div>
       </header>
@@ -269,6 +273,7 @@ export default function App() {
       <footer className="statusbar"><span title={editor.storageWarning ?? undefined}><i className="status-dot" /> {editor.storageWarning ? "STORAGE NEEDS ATTENTION" : editor.ready ? "LOCAL PROJECT" : "OPENING PROJECT"}</span><span>{state.project.settings.fps} FPS <i>·</i> REC.709 <i>·</i> {state.timeline.tracks.length} TRACKS</span><button onClick={exportProjectJson}>PROJECT DATA <ChevronDown size={11} /></button></footer>
       {contextMenu && <div className="context-menu" style={{ top: contextMenu.y, left: contextMenu.x }} onClick={(event) => event.stopPropagation()}><button onClick={() => run({ op: "timeline.duplicate", args: { clipId: contextMenu.clipId } })}><Copy size={12} /> Duplicate clip</button><button onClick={() => run({ op: "timeline.split", args: { clipId: contextMenu.clipId, atMs: playhead } })}><Scissors size={12} /> Split at playhead</button><button onClick={() => run({ op: "timeline.delete", args: { clipId: contextMenu.clipId } })}><Trash2 size={12} /> Delete clip</button></div>}
       {renderOpen && <RenderModal config={renderConfig} setConfig={setRenderConfig} progress={renderProgress} busy={renderBusy} timeline={state.timeline} previewDurationMs={getBrowserPreviewDuration(state.timeline, state.assets)} onClose={() => !renderBusy && setRenderOpen(false)} onStart={() => void startRender()} onProject={exportProjectJson} />}
+      {agentOpen && <AgentPanel state={state} playheadMs={playhead} onClose={() => setAgentOpen(false)} onApply={(proposal: LocalEditProposal) => { editor.dispatch(proposal.command); setToast({ message: "Agent edit applied · version saved" }); }} />}
       {toast && <div className={`toast${toast.error ? " error" : ""}`}>{toast.error ? <CircleHelp size={13} /> : <Check size={13} />} {toast.message}</div>}
     </div>
   );

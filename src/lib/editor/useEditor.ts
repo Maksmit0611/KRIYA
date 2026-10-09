@@ -62,13 +62,17 @@ export function useEditor() {
 
   const dispatch = useCallback((command: EditingCommand) => {
     const current = stateRef.current;
-    const { timeline, affectedObjectIds } = applyEditingCommand(current.timeline, command, current.assets);
+    const { timeline, affectedObjectIds } = applyEditingCommand(current.timeline, command, current.assets, {
+      commandId: command.commandId,
+      projectId: command.projectId,
+      timelineVersion: command.timelineVersion,
+    });
     const now = new Date().toISOString();
     const version = timeline.version;
     history.current.push(current.timeline);
     if (history.current.length > 120) history.current.shift();
     redoHistory.current = [];
-    const snapshot: ProjectVersion = { version, name: `Version ${version}`, createdAt: now, timeline: structuredClone(timeline), commandId: crypto.randomUUID(), label: command.op };
+    const snapshot: ProjectVersion = { version, name: `Version ${version}`, createdAt: now, timeline: structuredClone(timeline), commandId: command.commandId, label: command.op };
     update((latest) => ({
       ...latest,
       project: { ...latest.project, activeVersion: version, updatedAt: now },
