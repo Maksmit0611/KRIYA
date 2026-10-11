@@ -1,0 +1,264 @@
+# Required Free-to-Acquire Items for KRIYA
+
+This file is the separate free-only requirements list for this repository. It is intended to be handed to you, or to another agent, so the work can continue toward a live working agent/backend/flow without requiring any paid service or any secrets pasted into chat.
+
+Reality check first:
+- Right now this workspace has no project environment keys set.
+- `freebuff-env list` returns no keys.
+- `.env` and `.env.local` are gitignored and are not present here.
+- So the app starts as a local-only editor here until the optional cloud/auth values are added.
+
+The list is ordered from “needs this to go live with the existing cloud/auth path” to “optional, only if you want to go further.”
+
+---
+
+## 1. A free Convex deployment
+
+What it is:
+- A free Convex backend project so the Convex functions in `src/convex/` can be deployed and verified.
+
+Why KRIYA needs it:
+- `src/convex/projects.ts`, `src/convex/projectGuards.ts`, `src/convex/contracts.ts`, `src/convex/schema.ts`, and the auth config all expect a Convex deployment.
+- The cloud checkpoint path is implemented as code/tests, but it is not deployment-verified in this workspace.
+- Without a Convex deployment, the cloud path remains unverified.
+
+What you provide:
+- A free Convex project.
+- Deployment access/permission for this repository so the Convex functions can be deployed and codegen can run against the live deployment.
+
+What the next agent should do with it:
+- Run Convex codegen against the live deployment.
+- Deploy the Convex functions.
+- Verify the `get` function and cloud snapshot/guard flow end to end, not just in unit tests.
+
+Important:
+- Convex itself can be free for development/early use. The point is that KRIYA’s cloud path is not provable without some Convex deployment to deploy against.
+
+---
+
+## 2. A free Clerk app with the matching `convex` JWT template
+
+What it is:
+- A free Clerk application used for sign-in and organization context.
+
+Why KRIYA needs it:
+- The frontend already imports Clerk’s React SDK and Convex’s Clerk integration.
+- `src/convex/auth.config.ts` expects `CLERK_JWT_ISSUER_DOMAIN` and audience `convex`.
+- Cloud save is gated on a trusted active organization `workspaceId` claim.
+- The whole cloud checkpoint path depends on Clerk issuing a token the Convex auth layer can verify.
+
+What you provide:
+- A free Clerk application.
+- The JWT issuer domain for that Clerk instance.
+- A JWT template named `convex` that includes:
+  - `aud: "convex"`
+  - a workspace-scoped claim derived from Clerk’s verified active organization id, commonly `workspaceId` from `org.id`
+  - Clerk’s standard `sub` claim
+
+Important JWT template guidance:
+- Do not let the browser choose the workspace claim value independently.
+- If you use a custom template, name it `convex` so it matches the Convex auth config expectation.
+
+What the next agent should do with it:
+- Wire the Clerk app to the frontend env.
+- Configure the Convex integration for the same Convex deployment.
+- Test sign-in, organization selection, and cloud save/checkpoint behavior end to end.
+
+---
+
+## 3. Free env values for the optional cloud path
+
+What they are:
+- Frontend env:
+  - `VITE_CLERK_PUBLISHABLE_KEY`
+  - `VITE_CONVEX_URL`
+- Convex function env:
+  - `CLERK_JWT_ISSUER_DOMAIN`
+
+Why KRIYA needs them:
+- Without `VITE_CLERK_PUBLISHABLE_KEY` and `VITE_CONVEX_URL`, the Clerk/Convex providers are not mounted and the app starts local-only.
+- Without `CLERK_JWT_ISSUER_DOMAIN` on the Convex function environment, Convex auth cannot verify the token issuer.
+
+Where they live:
+- In the project’s environment UI, not in source code.
+- Never in source, prompts, project JSON, logs, exports, or version history.
+
+What you provide:
+- The publishable Clerk key and the Convex deployment URL for the frontend env.
+- The Clerk JWT issuer domain for the Convex function env.
+
+Important:
+- The publishable key is public configuration; the Convex URL is also public configuration.
+- Any secret provider keys are separate and must only be added if/where a real provider is actually connected.
+
+---
+
+## 4. Optional: a free object storage account for real private media storage
+
+What it is:
+- A free object storage bucket/account for durable private media storage with expiring signed URLs.
+
+Why KRIYA may need it later:
+- Today original media lives in browser IndexedDB only.
+- That is fine for a local-first editor, but it is not cloud media storage.
+- If you want real cloud media, signed upload/download URLs, and media lifecycle beyond one browser profile, you need object storage.
+
+What you provide:
+- A free object storage bucket/account.
+- The env keys for it, only if/when you actually want cloud media.
+
+Important:
+- Do not add this just to “have storage.”
+
+This is optional:
+- KRIYA’s current local editor does not require it.
+- It becomes relevant only when you want durable cloud media rather than browser-local media.
+
+---
+
+## 5. Optional: a free provider API key only if/when you want to connect a real provider
+
+What it is:
+- A free-tier provider API key for whatever provider you choose to connect first.
+
+Why KRIYA may need it later:
+- The provider/cost/routing/job/acceptance/provenance modules are implemented as contracts.
+- The generation UI currently uses placeholder provider/model records and local placeholder output.
+- To move past placeholders, you need a real provider adapter and its credentials through environment, not in source.
+
+What you provide:
+- A free-tier provider key.
+- The exact env var name the provider client expects.
+- Agreement on which provider/task to wire first.
+
+Important:
+- Do not add provider keys to source, prompts, project JSON, logs, exports, screenshots, or version history.
+- Add them only through the project env UI when you actually want a real provider connected.
+- If no provider is connected, KRIYA still runs locally.
+
+This is optional:
+- KRIYA is designed to remain useful with every external AI provider disconnected.
+
+---
+
+## 6. Optional: a free moderation/safety provider
+
+What it is:
+- A free moderation provider you can call from the safety gate.
+
+Why KRIYA may need it later:
+- The safety gate in `src/lib/agent/security.ts` is currently a policy-decision contract.
+- It fails closed correctly, but it is not backed by a real classifier yet.
+- If you want the safety gate to actually evaluate content instead of only storing the contract, you need a moderation provider.
+
+What you provide:
+- A free moderation provider key/env.
+- Agreement on which categories the provider supports and how results map into KRIYA’s `SafetyAssessment` model.
+
+Important:
+- Safety gates must be enforced before real provider execution and publishing.
+- Public availability is not consent or commercial authorization.
+
+This is optional:
+- The gate contract exists now; a provider is only required if you want the gate to be more than policy/shapes.
+
+---
+
+## 7. Optional: a free server-side secret store
+
+What it is:
+- A free vault or secret manager for server-side secret references.
+
+Why KRIYA may need it later:
+- Today provider/connection secrets are not stored in source and are not yet backed by a vault in this workspace.
+- If you want server-side secret references instead of only env-based handling, you need a secret store.
+
+What you provide:
+- A free vault/secret-manager setup.
+- Agreement on how Convex functions reference secrets.
+
+Important:
+- Even with a vault, the redaction and “no secrets in bundles/logs/project JSON” rules still apply.
+- This is about isolating and rotating secrets server-side, not about putting them in code.
+
+This is optional:
+- It is not required to run the local editor or the current cloud checkpoint metadata path.
+
+---
+
+## 8. Documentation alignment permission
+
+What it is:
+- A yes/no decision about whether `docs/IMPLEMENTATION-STATUS.md` should be made to match this checkout exactly.
+
+Current status:
+- `docs/IMPLEMENTATION-STATUS.md` already describes Stage 5 honestly and lists real partial/not-started items.
+- Its “Tests Passing” section, however, is truncated/incomplete relative to this checkout.
+- The rest of the repo is consistent with the doc’s narrative.
+
+What you provide:
+- A decision to leave it as-is or to update it to match the actual current state.
+
+Why it matters:
+- A handoff is easier to continue if the status document matches the actual repo.
+
+---
+
+## What is not required
+
+Not required to run locally:
+- Convex deployment
+- Clerk app
+- Cloud env values
+- Any provider key
+- Any object storage
+- Any moderation provider
+- Any secret store
+
+Not required for the current tests:
+- Any env keys
+- Any provider credentials
+- Any live backend
+
+Not acceptable anywhere in the repo:
+- Provider API keys in source code, project JSON, prompts, asset metadata, logs, screenshots, exports, or version history
+- Secret values pasted into chat or stored in frontend bundles
+
+---
+
+## Free-only reality check
+
+Everything above can be acquired for free at the development/early stage:
+- Convex can be used free for development.
+- Clerk has a free tier suitable for development.
+- Object storage, provider keys, moderation, and vault services can often be started on free tiers if and when you choose to connect them.
+
+Nothing in this list requires a paid tier to begin. The only requirement is that you actually acquire the free account/service and give the next agent the env wiring it needs.
+
+---
+
+## Recommended first acquisition order
+
+If you want the smallest path that makes the existing cloud/auth path real:
+1. Free Convex deployment
+2. Free Clerk app + `convex` JWT template + workspace claim
+3. Frontend env: `VITE_CLERK_PUBLISHABLE_KEY`, `VITE_CONVEX_URL`
+4. Convex function env: `CLERK_JWT_ISSUER_DOMAIN`
+
+If you want the smallest path that makes the app genuinely useful beyond local-only media:
+1. Free Convex deployment + Clerk app + env as above
+2. Optional free object storage if you want cloud media later
+3. Optional free provider key only when you are ready to connect one provider
+
+If you want the smallest path that makes the agent story testable beyond a structural corpus:
+1. Keep the existing local agent as-is
+2. Optionally add a free moderation provider behind the safety gate
+3. Later add an evaluator runner for `evals/regression.json`
+
+---
+
+## Handoff note
+
+This file is meant to be read alongside `docs/AGENT-HANDOFF.md`. That file contains the full un-compressed project context. This file is the separate free-to-acquire requirements list only.
+
+If you already have any of these free accounts, tell the next agent which ones exist and which env var names they use, and do not paste secret values into chat.
