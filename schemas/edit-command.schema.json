@@ -43,7 +43,7 @@
     {
       "properties": {
         "op": { "const": "timeline.rippleDelete" },
-        "args": { "type": "object", "additionalProperties": false, "required": ["trackIds", "startMs", "endMs", "preserveSync"], "properties": { "trackIds": { "type": "array", "items": { "type": "string" } }, "startMs": { "type": "number", "minimum": 0 }, "endMs": { "type": "number", "minimum": 0 }, "preserveSync": { "type": "boolean" } } }
+        "args": { "type": "object", "additionalProperties": false, "required": ["trackIds", "startMs", "endMs", "preserveSync"], "properties": { "trackIds": { "type": "array", "items": { "type": "string" } }, "startMs": { "type": "number", "minimum": 0 }, "endMs": { "type": "number", "minimum": 0 }, "preserveSync": { "type": "boolean" }, "splitClipIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } } }
       }
     },
     {

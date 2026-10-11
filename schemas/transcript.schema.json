@@ -4,11 +4,96 @@
   "title": "KRIYA Transcript",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "assetId", "language", "status", "segments", "createdAt"],
+  "required": [
+    "id",
+    "assetId",
+    "assetVersion",
+    "language",
+    "languageSelection",
+    "provider",
+    "model",
+    "status",
+    "version",
+    "segments",
+    "speakers",
+    "quality",
+    "createdAt",
+    "updatedAt"
+  ],
   "properties": {
-    "id": { "type": "string", "minLength": 1 }, "assetId": { "type": "string", "minLength": 1 },
-    "language": { "type": ["string", "null"] }, "status": { "enum": ["queued", "running", "completed", "failed"] },
+    "id": { "type": "string", "minLength": 1 },
+    "assetId": { "type": "string", "minLength": 1 },
+    "assetVersion": { "type": "string", "minLength": 1 },
+    "language": { "type": ["string", "null"] },
+    "languageSelection": { "enum": ["automatic", "manual"] },
+    "provider": { "type": "string", "minLength": 1 },
+    "model": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["completed", "manual"] },
+    "version": { "type": "integer", "minimum": 1 },
     "createdAt": { "type": "string", "format": "date-time" },
-    "segments": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["id", "startMs", "endMs", "text"], "properties": { "id": { "type": "string", "minLength": 1 }, "startMs": { "type": "number", "minimum": 0 }, "endMs": { "type": "number", "minimum": 0 }, "text": { "type": "string" }, "speakerId": { "type": ["string", "null"] } }, "allOf": [{ "if": { "required": ["startMs", "endMs"] }, "then": { "properties": { "endMs": { "exclusiveMinimum": 0 } } } }] } }
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "startMs", "endMs", "speakerId", "text", "words"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "startMs": { "type": "number", "minimum": 0 },
+          "endMs": { "type": "number", "exclusiveMinimum": 0 },
+          "text": { "type": "string" },
+          "speakerId": { "type": ["string", "null"] },
+          "words": { "type": "array", "items": { "$ref": "#/$defs/word" } }
+        }
+      }
+    },
+    "speakers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^speaker_[A-Za-z0-9_-]+$" },
+          "label": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timestampedWordCount",
+        "untimedWordCount",
+        "overlappingSegments",
+        "wer",
+        "wordTimestampErrorMs",
+        "speakerAttributionQuality"
+      ],
+      "properties": {
+        "timestampedWordCount": { "type": "integer", "minimum": 0 },
+        "untimedWordCount": { "type": "integer", "minimum": 0 },
+        "overlappingSegments": { "type": "integer", "minimum": 0 },
+        "wer": { "type": ["number", "null"], "minimum": 0 },
+        "wordTimestampErrorMs": { "type": ["number", "null"], "minimum": 0 },
+        "speakerAttributionQuality": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "word": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "startMs", "endMs", "text", "confidence", "speakerId"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "startMs": { "type": "number", "minimum": 0 },
+        "endMs": { "type": "number", "exclusiveMinimum": 0 },
+        "text": { "type": "string", "minLength": 1 },
+        "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "speakerId": { "type": ["string", "null"] }
+      }
+    }
   }
 }
