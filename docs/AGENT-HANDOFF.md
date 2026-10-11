@@ -1,0 +1,988 @@
+# KRIYA — Full Agent Context Bundle
+
+This bundle is intended to be handed to another agent (Claude, ChatGPT, or similar) so it can continue implementation honestly, without recompressing or dropping existing project data.
+
+Note on the files below: I kept the full data inside one file here so you get a single complete handoff, but I did not compress anything. After this file, I also list the separate required-free-to-acquire file I created.
+
+Who this is for:
+- A capable coding agent that is being asked to continue KRIYA from exactly this checkout.
+- It should treat this bundle as the source of truth for what exists, what is only a contract/test, and what is not wired yet.
+
+Important workspace facts first:
+- Repo root: `/home/daytona/codebase`
+- Current branch: `main`
+- Remote: `origin` → `https://github.com/Maksmit0611/KRIYA.git`
+- Git history is short: `0c94d20` “Add the local-first KRIYA editor foundation.” and `d7a2447` “Initial commit.”
+- This is a Freebuff Cloud workspace. Git operations are authenticated with a repository-scoped GitHub App credential that Freebuff injects for fetch/pull/push and `gh`. That credential is intentionally not visible in environment inspection and is not stored in `GITHUB_TOKEN`, `~/.git-credentials`, SSH keys, or the remote URL.
+- The project is a Vite + React + TypeScript frontend with Bun scripts, using `@clerk/clerk-react`, `ajv`, `convex`, and `lucide-react`.
+
+Runtime verification in this workspace right now:
+- `bun run typecheck` — clean
+- `bun test` — 69 passed, 0 failed, 464 assertions, 10 files
+
+Environment reality:
+- `freebuff-env list` returns no keys right now.
+- `.env` and `.env.local` are gitignored and loaded automatically into terminal commands and the preview process when present. Neither is present here right now.
+- Because no env keys exist, this app starts as a local-only editor in this workspace. The Clerk/Convex cloud path is not wired here yet.
+
+Pre-existing untracked file to preserve:
+- `src/test_qa.txt` contains `"test163"`. It is not part of the app. Do not delete it unless explicitly asked.
+
+Handoff files I created for you:
+- `docs/AGENT-HANDOFF.md` — this file
+- `docs/REQUIRED-FREE-TO-ACQUIRE.md` — only-free items needed to move this toward a live working agent/backend/flow
+
+What this bundle contains:
+1. Exact workspace facts
+2. What the app is today
+3. Stage-by-stage file inventory
+4. Architecture and invariants
+5. Schema surface
+6. State model
+7. Editor overview
+8. Transcription/caption system
+9. Agent core
+10. Provider/job/acceptance foundation
+11. Cloud/auth integration
+12. QA, error design, and evaluations
+13. Required-free-to-acquire list
+14. Next steps and honest blockers
+
+---
+
+# 1. Exact workspace facts
+
+Repo root layout:
+- `package.json`
+- `tsconfig.json`
+- `vite.config.ts`
+- `convex.json`
+- `index.html`
+- `src/`
+  - `main.tsx`
+  - `App.tsx`
+  - `index.css`
+  - `editor.css`
+  - `components/`
+    - `AgentPanel.tsx`
+    - `AgentPanel.css`
+    - `GeneratePanel.tsx`
+  - `lib/`
+    - `editor/useEditor.ts`
+    - `media/frameExport.ts`
+    - `media/inspect.ts`
+    - `media/previewDuration.ts`
+    - `project/initial.ts`
+    - `project/migrations.ts`
+    - `project/storage.ts`
+    - `project/types.ts`
+    - `project/validation.ts`
+    - `timeline/commands.ts`
+    - `timeline/commands.test.ts`
+    - `timeline/integrity.test.ts`
+    - `transcription/engine.ts`
+    - `transcription/types.ts`
+    - `agent/types.ts`
+    - `agent/orchestrator.ts`
+    - `agent/orchestrator.test.ts`
+    - `agent/security.ts`
+    - `agent/security.test.ts`
+    - `agent/evaluations.ts`
+    - `agent/evaluations.test.ts`
+    - `agent/ui.ts`
+    - `cloud/CloudProvider.tsx`
+    - `cloud/context.tsx`
+    - `providers/index.ts`
+    - `providers/capabilities.ts`
+    - `providers/adapters.ts`
+    - `providers/registry.ts`
+    - `providers/router.ts`
+    - `providers/generation.ts`
+    - `providers/cost.ts`
+    - `providers/job.ts`
+    - `providers/acceptance.ts`
+    - `providers/webhooks.ts`
+    - `providers/cli.ts`
+    - `providers/mcp.ts`
+    - `providers/referenceAssets.ts`
+    - `providers/errors.ts`
+    - `providers/errors.test.ts`
+    - `qa/preflight.ts`
+    - `qa/preflight.test.ts`
+  - `convex/`
+    - `auth.config.ts`
+    - `auth.config.test.ts`
+    - `schema.ts`
+    - `schema.test.ts`
+    - `contracts.ts`
+    - `projectGuards.ts`
+    - `projectGuards.test.ts`
+    - `projects.ts`
+    - `_generated/dataModel.ts`
+    - `_generated/server.ts`
+- `schemas/`
+  - `project.schema.json`
+  - `timeline.schema.json`
+  - `asset.schema.json`
+  - `edit-command.schema.json`
+  - `agent-run.schema.json`
+  - `agent-tool-call.schema.json`
+  - `agent-tool-input.schema.json`
+  - `agent-tool-output.schema.json`
+  - `transcript.schema.json`
+  - `caption-track.schema.json`
+  - `audit-event.schema.json`
+  - `transcription-job.schema.json`
+  - `provider.schema.json`
+  - `generation-job.schema.json`
+  - `render-job.schema.json`
+  - `rights.schema.json`
+  - `consent.schema.json`
+- `config/tool-registry.json`
+- `evals/regression.json`
+- `docs/`
+  - `ARCHITECTURE.md`
+  - `IMPLEMENTATION-STATUS.md`
+  - `AGENT-HANDOFF.md`
+  - `REQUIRED-FREE-TO-ACQUIRE.md`
+- `AGENTS.md`
+- `README.md`
+
+Package manager:
+- Bun
+
+Scripts:
+- `dev` → `vite --host 0.0.0.0`
+- `build` → `tsc -b && vite build`
+- `typecheck` → `tsc -b --noEmit`
+- `test` → `bun test`
+- `convex:codegen` → `convex codegen`
+
+Main dependencies:
+- `@clerk/clerk-react` `^5.61.3`
+- `ajv` `^8.17.1`
+- `convex` `^1.46.0`
+- `lucide-react` `^0.468.0`
+- `react` `^18.3.1`
+- `react-dom` `^18.3.1`
+
+Main dev dependencies:
+- `@types/bun` `^1.2.0`
+- `@types/react` `^18.3.12`
+- `@types/react-dom` `^18.3.1`
+- `@vitejs/plugin-react` `^4.3.4`
+- `typescript` `^5.7.2`
+- `vite` `^6.0.5`
+
+TypeScript config highlights:
+- target ES2022
+- module ESNext
+- moduleResolution Bundler
+- jsx react-jsx
+- strict true
+- noUnusedLocals true
+- noUnusedParameters true
+- skipLibCheck true
+- include: `src`, `vite.config.ts`
+
+Gitignore:
+- `node_modules/`
+- `dist/`
+- `*.tsbuildinfo`
+- `.env`
+- `.env.local`
+
+---
+
+# 2. What the app is today
+
+KRIYA is a human-led, AI-native creative editing platform.
+
+Right now it is:
+- A local-first browser video editor
+- With an optional cloud checkpoint path that exists as code/tests but is not live here
+- With Stage 5 hardening modules that exist as contracts/tests but are not connected to real providers/workers/moderation/render yet
+
+What it can do today:
+- Create and validate versioned projects and multitrack timelines
+- Apply deterministic editing commands with stale-version and locked-track protection
+- Keep source media immutable in a separate IndexedDB store
+- Import media locally with browser-level inspection
+- Undo/redo with immutable snapshots
+- Restore historical versions
+- Record audit events
+- Download an editable project manifest
+- Render a local browser WebM preview and a single-frame PNG at the playhead
+- Overlay captions in the viewer when supported
+- Import manual transcripts, search them, edit them, rename speakers, generate/export captions
+- Preview pause-removal cuts and captions through a local agent panel
+- Commit only an explicitly approved, version-bound proposal
+- Run local agent security gates: tool permission scoping and a closed safety gate
+- Run an export preflight that fails closed on blockers and marks browser-unmeasurable checks as `unverified`
+- Classify failures into user-safe error categories and redact sensitive text
+- Validate an agent regression corpus structurally across all 12 required categories
+
+What it cannot do yet:
+- Run a live Convex backend here
+- Sign in through Clerk/Convex here because no env is set
+- Use a real provider, real provider credentials, a durable job queue, a render worker, a moderation classifier, or a rights/consent evidence workflow
+- Do authoritative H.264 MP4 rendering
+- Do team membership/roles beyond single-owner + workspace claim
+- Store cloud media instead of browser-local IndexedDB
+- Run an evaluator runner that executes prompts and scores agent behavior
+
+Honest description:
+- This is a coherent local editor plus a Stage 5 hardening/architecture layer. It is not a live AI video platform yet.
+
+---
+
+# 3. Stage-by-stage file inventory
+
+## Stage 1 — Local-first editor foundation
+
+`src/lib/project/types.ts`
+- Canonical types: Project, Asset, AssetProvenance, Timeline, Track, TimelineClip, Transform, EditingOperation, EditingCommand, ProjectVersion, AuditEvent, StoredEditorState, and related types.
+
+`src/lib/project/initial.ts`
+- `createInitialState()` builds a fresh local project/timeline/assets/editor state with default tracks.
+
+`src/lib/project/migrations.ts`
+- `migrateProject`, `migrateStoredEditorState`, `migrateTimeline`
+- Unknown schema versions fail closed.
+- Local state migration adds missing Stage 2 collections.
+
+`src/lib/project/storage.ts`
+- IndexedDB stores: `editor-state` and `original-media`
+- `loadEditorState`, `saveEditorState`, `saveOriginalMedia`, `getOriginalMedia`
+- Source media stays in a separate store from project metadata.
+
+`src/lib/project/validation.ts`
+- AJV-based validators for project/timeline/asset/command/transcript/caption/agent-run/agent-tool-call/transcription-job
+- `assertProject`, `assertAsset`, `assertTimeline`, `assertCommand`, `assertTranscript`, `assertCaptionTrack`, `assertAgentRun`, `assertAgentToolCall`, `assertTranscriptionJob`, `assertProposal`, `assertStoredEditorState`
+- Validates links: project/timeline ids, asset/project/workspace ownership, clip asset references, transcript asset references, caption transcript references, agent run/tool-call/proposal relationships, version snapshots.
+
+`src/lib/timeline/commands.ts`
+- `applyEditingCommand(timeline, operation, assets, envelope?)`
+- Supports: `timeline.insert`, `timeline.split`, `timeline.trim`, `timeline.move`, `timeline.rippleDelete`, `timeline.duplicate`, `timeline.delete`, `timeline.setSpeed`, `timeline.transform`, `timeline.setOpacity`, `audio.setGain`
+- Enforces: command validation, timeline validation, project id match, stale version rejection, locked track rejection, asset/project ownership, track kind compatibility, source-range safety, positive scales, gain/opacity/speed ranges.
+
+`src/lib/timeline/commands.test.ts`
+- Deterministic editing command tests: split, ripple delete, supplied split ids, stale version, locked track, incompatible/foreign-project insert, trim, agent-shaped invalid commands, speed/opacity/gain, persisted project reference validation, caption sync locking, browser preview duration from visible picture clips.
+
+`src/lib/timeline/integrity.test.ts`
+- Timeline corruption-resistance tests: overlapping clip delete, frame-boundary split, out-of-range split/trim, locked-track ripple delete, degenerate ripple ranges, missing asset insert, removed asset detection, stale-version rejection, simultaneous-same-base edits, 50-command undo/redo, historical version restore.
+
+`src/lib/editor/useEditor.ts`
+- Local editor hook: load/save IndexedDB state, autosave, in-memory undo/redo with immutable snapshots, version restore, track add, asset add, project name set, storage warning.
+
+`src/lib/media/inspect.ts`
+- Browser-level upload inspection: MIME + file-signature checks, metadata extraction. Not FFprobe; no proxies, thumbnails, or waveforms.
+
+`src/lib/media/previewDuration.ts`
+- `getBrowserPreviewDuration(timeline, assets)` returns max end time across visible video/image clips only.
+
+`src/lib/media/frameExport.ts`
+- Browser frame capture: `frameExportLimits`, `renderFrameToBlob`, `downloadFrame`.
+
+`src/App.tsx`
+- Main editor UI: media import, timeline, inspector, playback, top bar actions, cloud controls placeholder, agent panel, render modal, context menu, toasts.
+
+`src/main.tsx`
+- React entry point; mounts `CloudProvider > App`, plus optional Gravity script injection when `VITE_GRAVITY_PUBLISHER_ID` is set.
+
+`src/index.css`
+- Global design tokens and app shell styles.
+
+`src/editor.css`
+- Editor-specific styles.
+
+`index.html`
+- Root HTML mounting `#root`.
+
+Stage 1 status:
+- Complete enough to be a usable local editor.
+- Local exports are browser-only previews, not authoritative MP4.
+
+## Stage 2 — Local agent workflow
+
+Schema additions:
+- `schemas/agent-run.schema.json`
+- `schemas/agent-tool-call.schema.json`
+- `schemas/agent-tool-input.schema.json`
+- `schemas/agent-tool-output.schema.json`
+- `schemas/transcription-job.schema.json`
+- `schemas/caption-track.schema.json`
+
+Types:
+- `src/lib/agent/types.ts`
+  - `AgentRun`, `TranscriptionJob`, `AgentToolCall`, `EditProposal`, `ToolDefinition`, `ApprovalClass`, `AgentRunStatus`, `ToolPermission`, `ToolCostClass`
+- `src/lib/transcription/types.ts`
+  - `TranscriptWord`, `TranscriptSegment`, `TranscriptSpeaker`, `Transcript`, `CaptionStyle`, `CaptionCue`, `CaptionTrack`, `TranscriptEditorState`
+- `src/lib/transcription/engine.ts`
+  - Caption generation, caption export, transcript search, segment/speaker editing, caption remap after cuts, transcript quality, validation helpers, `assetVersion`.
+
+`src/lib/agent/orchestrator.ts`
+- Local agent orchestration: `previewAgentRequest`, `commitAgentProposal`, `makeManualTranscript`, `withTranscript`, `searchStoredTranscript`, `listAgentTools`, `getAgentToolRegistry`
+- Input/output validation via AJV from schema `$defs`
+- Tool permission scoping via `assertAgentToolPermission`
+- Pause removal operation building, proposal building, proposal commit with revalidation and stale detection.
+
+`src/lib/agent/orchestrator.test.ts`
+- Tests for preview descending synchronized cuts, stable split ids, captions without shifting source words, explicit approval requirement, stale detection, commit checkpoint/audit, caption retime in same approved checkpoint, manual transcript acceptance when browser audio metadata unknown, legacy state migration, and caption word remap through ripple cut.
+
+`src/lib/agent/ui.ts`
+- React-friendly wrappers: `importTranscript`, `editTranscript`, `renameSpeaker`, `previewAgent`, `commitAgent`, `createCaptions`, `saveCaptionTrack`, `editCaptionCue`, `exportCaptions`, `activeCaption`, `currentTranscriptWord`
+
+`src/components/AgentPanel.tsx`
+- Agent panel UI.
+
+`src/components/AgentPanel.css`
+- Agent panel styles.
+
+`config/tool-registry.json`
+- Registered tools with schema refs, permissions, cost class, reversible/approval/timeout/idempotency/availability metadata.
+
+Stage 2 status:
+- Local transcript/caption workflow is implemented and tested.
+- No real transcription provider, no AI model, no server job runner.
+
+## Cloud / auth stage
+
+`src/lib/cloud/context.tsx`
+- `useCloudRuntime()` hook returning current cloud runtime status/workspace id.
+
+`src/lib/cloud/CloudProvider.tsx`
+- `CloudProvider` React context; `CloudControls` UI.
+
+`src/convex/auth.config.ts`
+- Convex Auth config expecting `CLERK_JWT_ISSUER_DOMAIN`.
+
+`src/convex/auth.config.test.ts`
+- Tests for auth config validation.
+
+`src/convex/schema.ts`
+- Convex schema definition for project metadata/checkpoint tables.
+
+`src/convex/schema.test.ts`
+- Schema contract tests.
+
+`src/convex/contracts.ts`
+- Validation helpers for project/timeline/asset bundles and editing commands.
+
+`src/convex/projectGuards.ts`
+- Guards: `assertProjectOwner`, `assertTimelineVersion`, `assertWorkspaceClaim`, `assertDurableCloudStorageKey`, `assertCloudSnapshotVersion`, `assertProjectTimelineReferences`
+
+`src/convex/projectGuards.test.ts`
+- Guard tests.
+
+`src/convex/projects.ts`
+- Convex functions including `get` and cloud snapshot backup flow.
+
+`convex.json`
+- Convex functions config pointing at `src/convex/`.
+
+`src/convex/_generated/dataModel.ts`
+- Generated Convex bindings.
+
+`src/convex/_generated/server.ts`
+- Generated Convex bindings.
+
+Cloud status:
+- Cloud checkpoint is metadata-only: project/timeline/asset metadata only, no source media bytes.
+- Guards validate authenticated owner, trusted workspace claim, asset references, and timeline version.
+- Not deployment-verified in this workspace.
+
+## Provider / routing / job / acceptance stage
+
+`src/lib/providers/index.ts`
+- Barrel export for provider modules.
+
+`src/lib/providers/capabilities.ts`
+- `ProviderCapability` union, `PROVIDER_CAPABILITY_LABELS`, `hasCapability`, `taskCapabilities`, `isReasoningOrchestrationCapability`, `GenerationTask`, labeled task map.
+
+`src/lib/providers/adapters.ts`
+- Provider/model/connection/asset adapter types; `MediaProviderAdapter` interface; `requestReferences`; role mapping.
+
+`src/lib/providers/registry.ts`
+- Provider/model/connection helpers: availability, capability check, model filtering, status merging, factory builders, display name helper.
+
+`src/lib/providers/router.ts`
+- `selectProvider(...)` with capability filtering, reachability checks, model selection, quality-profile selection, approval reasoning.
+
+`src/lib/providers/generation.ts`
+- `GenerationRequest`, `GenerationOutputSpec`, `ProviderBudget`, `WorkspaceBudget`, `CostLedgerEntry`, routing/validation types.
+
+`src/lib/providers/cost.ts`
+- Budget allow/check helpers, ledger totals, period cost, currency formatting, `estimateCostFallsUnderBudget`, provider limit helpers.
+
+`src/lib/providers/job.ts`
+- Job lifecycle types, `JobRecord`, `JobApprovalState`, allowed transitions, `isTerminalJobStatus`, `canTransition`, `classifyProviderFailure`, output filters.
+
+`src/lib/providers/acceptance.ts`
+- `GenerationAcceptanceMetadata`, quality criteria, scoring, moderation, technical metrics, provenance info, acceptance helpers.
+
+`src/lib/providers/webhooks.ts`
+- Webhook event types, delivery/processing records, dedup/fingerprint helpers, known-event predicate, processing-required predicate.
+
+`src/lib/providers/cli.ts`
+- CLI connector/operation/invocation types, allow/arg sanitization helpers, forbidden shell patterns, idempotency key construction.
+
+`src/lib/providers/mcp.ts`
+- MCP transport/connection/permission/capability types and helpers.
+
+`src/lib/providers/referenceAssets.ts`
+- `ReferenceAssetBinding` and request reference role mapping.
+
+`src/lib/providers/errors.ts`
+- User-safe error categories, definitions, failure-class mapping, text-signal classification, redaction, `toUserFacingError`.
+
+`src/lib/providers/errors.test.ts`
+- Error-design tests for categories, failure-class mapping, text recognition, closed fallback, technical-detail gating, and sensitive-text redaction.
+
+Provider stage status:
+- Strong typed foundations.
+- No real provider credentials, adapters, or worker runtime wired here.
+
+## Stage 5 hardening modules
+
+`src/lib/qa/preflight.ts`
+- `runExportPreflight(...)`, `assertExportPreflightPassed(...)`, supported FPS list, preset/storage/budget input types, `pass/warning/blocker/unverified` model.
+
+`src/lib/qa/preflight.test.ts`
+- Export QA tests for valid export, missing media, browser-local/placeholder storage keys, invalid preset/frame rate, intentional resolution difference warning, unresolved consent vs silent export warning, insufficient storage/budget, caption out-of-range, and invalid-timeline fast-fail.
+
+`src/lib/providers/errors.ts`
+- User-safe error categories, definitions, failure-class mapping, text-signal classification, redaction, `toUserFacingError`.
+
+`src/lib/providers/errors.test.ts`
+- Error-design tests.
+
+`src/lib/agent/security.ts`
+- `AGENT_PERMISSION_SCOPES`, `agentToolPermissionGranted`, `assertAgentToolPermission`, `SAFETY_CATEGORIES`, `SafetyAssessment`, `SafetyGateResult`, `evaluateSafetyGate`, `assertSafetyGatePassed`
+
+`src/lib/agent/security.test.ts`
+- Security tests for tool scoping, required-category completeness, blocked/review handling, duplicate/unknown/provider-specific rejection.
+
+`src/lib/agent/evaluations.ts`
+- `validateEvaluationCorpus(...)`, `assertEvaluationCorpus(...)`, category/assertion key/outcome types.
+
+`src/lib/agent/evaluations.test.ts`
+- Corpus acceptance, category coverage, tool/op reference checks, duplicate-id rejection, unknown category/tool rejection, single-key assertion rule, missing-coverage reporting, malformed corpus rejection.
+
+`evals/regression.json`
+- Checked-in regression corpus with 12 categories and 12 cases.
+
+Stage 5 status:
+- Contracts + tests exist and pass.
+- No live provider, render, moderation, queue, or evaluator runner yet.
+
+## Documentation
+
+`README.md`
+- Product overview, Stage 1 and Stage 2 descriptions, Clerk/Convex cloud checkpoint instructions, optional Gravity note.
+
+`AGENTS.md`
+- Product and core architecture rules, development requirements, agent behavior rules.
+
+`docs/ARCHITECTURE.md`
+- Non-negotiable data flow, stage boundaries, production target separation, data/reliability invariants, Stage 1 limitations.
+
+`docs/IMPLEMENTATION-STATUS.md`
+- Current Stage 5 checkpoint with completed/partial/not-started sections and honest limitations.
+
+---
+
+# 4. Architecture and invariants
+
+Non-negotiable data flow:
+`User gesture / validated structured command → version-checked timeline operation → schema-valid project state → checkpoint + audit → local autosave`
+
+Key invariants:
+- Project and Timeline are canonical and versioned.
+- UI state is a projection of these records, not an alternate truth.
+- Editing is non-destructive: source media is immutable; edits reference source ranges/transforms/effects.
+- Commands carry project id, command id, and expected timeline version; stale writes fail.
+- JSON Schema is the contract; `src/lib/project/validation.ts` is the runtime validator.
+- Every meaningful state change becomes a version checkpoint + audit entry.
+- Provider behavior is behind capability-reporting adapters.
+- Long-running work is behind durable asynchronous jobs/workers; browser timers are not production queues.
+- Browser IndexedDB is a local workspace, not server-side storage/backup/collaboration.
+- Secrets never reach frontend bundles, prompts, project/asset JSON, logs, exports, or version history.
+
+Stage 1 boundaries:
+- `src/lib/project/types.ts` defines canonical types.
+- `schemas/` is the schema contract.
+- `src/lib/project/validation.ts` validates at runtime.
+- `src/lib/timeline/commands.ts` applies validated operations.
+- `src/lib/project/storage.ts` persists local state and original blobs separately.
+- UI renders state and dispatches commands; provider SDKs are not embedded in the editor.
+
+Production target separation:
+1. Authenticated frontend with workspace-scoped authorization.
+2. Project service + append-only command/audit/version persistence.
+3. Asset service with constrained signed URLs and ownership enforcement.
+4. Durable async job API with idempotency/retries/cancellation/progress/cost controls.
+5. Isolated media workers and isolated provider adapters.
+6. Private object storage + delivery with access policy/retention.
+7. Provider/agent tool registry with schema validation, capability metadata, approvals, rate/cost limits, secret isolation.
+
+---
+
+# 5. Schema surface
+
+`project.schema.json`
+- Project contract: schema version, id, workspace id, name, timestamps, settings, timeline id, active version.
+- Settings: width, height, fps, sampleRate, colorSpace.
+
+`timeline.schema.json`
+- Timeline contract: version, timebase, duration, tracks/clips with transform/effects/keyframes.
+- Track kinds: video, audio, graphics, captions.
+
+`asset.schema.json`
+- Asset contract: id, workspace/project, kind, source, storage key, file metadata, provenance, rights record id.
+- Kinds: video, image, audio, generated-video, generated-image, voice, music, sound-effect, graphic, font, subtitle, proxy, render.
+- Source values: upload, generated, derived.
+
+`edit-command.schema.json`
+- Editing command with op enum and per-op args, plus command/project/timeline metadata.
+- Ops: timeline.insert, timeline.split, timeline.trim, timeline.move, timeline.rippleDelete, timeline.duplicate, timeline.delete, timeline.setSpeed, timeline.transform, timeline.setOpacity, audio.setGain
+
+`agent-run.schema.json`
+- Agent run contract.
+
+`agent-tool-call.schema.json`
+- Agent tool call contract.
+
+`agent-tool-input.schema.json`
+- Per-tool input `$defs`: inspect, transcriptImport, transcribe, searchTranscript, timelineOperations, commit, captions, captionExport, generation.
+
+`agent-tool-output.schema.json`
+- Per-tool output `$defs`: inspect, transcript, searchTranscript, proposal, commit, captionExport, generation.
+
+`transcript.schema.json`
+- Transcript contract with segments/words/speakers/quality.
+
+`caption-track.schema.json`
+- Caption track contract with style, cues, settings.
+
+`audit-event.schema.json`
+- Audit event contract.
+
+`transcription-job.schema.json`
+- Transcription job contract.
+
+`provider.schema.json`
+- Provider connection schema with secret reference only, never credential values.
+
+`generation-job.schema.json`
+- Generation job schema that explicitly forbids embedding apiKey/accessToken/refreshToken.
+
+`render-job.schema.json`
+- Render job schema.
+
+`rights.schema.json`
+- Rights record with conditional evidence/verified requirements.
+
+`consent.schema.json`
+- Consent record with conditional evidence/verified requirements and adult-content age gating.
+
+Important cross-checks:
+- TypeScript contracts and schemas should stay aligned; `src/lib/project/validation.ts` is the bridge.
+- Edit command schema op enum and `config/tool-registry.json` tool ids are referenced by agent/evaluator logic.
+
+---
+
+# 6. State model
+
+Project:
+- `schemaVersion`, `id`, `workspaceId`, `name`, `createdAt`, `updatedAt`, `settings`, `timelineId`, `activeVersion`
+- Settings: width, height, fps, sampleRate, colorSpace.
+
+Asset:
+- `id`, `workspaceId`, `projectId`, `kind`, `source`, `storageKey`, `fileName`, `mimeType`, `fileSize`, `durationMs`, `width`, `height`, `fps`, `hasAudio`, `createdAt`, `metadata`, `provenance`, `rightsRecordId`
+
+Timeline:
+- `schemaVersion`, `id`, `projectId`, `version`, `timebase`, `durationMs`, `tracks`
+- Each track has id, kind, name, locked, visible, muted, solo, height, clips.
+- Each clip has id, assetId, timelineStartMs, sourceStartMs, sourceDurationMs, durationMs, speed, opacity, gain, muted, transform, effects, keyframes.
+
+Editing command:
+- `EditingOperation` + `commandId`, `projectId`, `timelineVersion`
+
+Stored editor state:
+- `project`, `timeline`, `assets`, `versions`, `auditLog`, `selectedClipId`, `selectedTrackId`, `transcripts`, `captionTracks`, `agentRuns`, `agentToolCalls`, `agentProposals`, `transcriptionJobs`
+
+Agent run:
+- `AgentRun` with request, status, proposal id, estimated/actual cost, approval class, timestamps, error.
+
+Agent tool call:
+- `AgentToolCall` with run id, tool id, input/output, status, timestamps, error.
+
+Edit proposal:
+- `EditProposal` with run id, project id, base timeline version, operations, summary, proposed captions/transcripts, resulting caption tracks, resulting timeline, timestamps.
+
+Proposal summary includes:
+- clips removed/added, duration before/after, captions added/affected, audio sync preserved, estimated cost, generated assets required, affected ranges.
+
+Transcription/caption:
+- Transcripts carry asset id/version, language, provider/model, status, segments, speakers, quality.
+- Caption tracks carry transcript id, language, aspect ratio, style, cues, settings, timestamps.
+
+Cloud checkpoint:
+- Metadata only: project/timeline/asset metadata; not source media bytes.
+
+---
+
+# 7. Editor overview
+
+Top bar:
+- Brand, project name editing, save status.
+- Undo/redo.
+- Version selector for restore.
+- Project aspect ratio selector.
+- Download editable project manifest.
+- Cloud controls.
+- Agent panel toggle.
+- Render button.
+
+Media panel:
+- Media/Generate/Characters/Graphics/Text/Audio/Effects tabs.
+- Media tab: drop zone import, asset library, search, bins placeholder, storage note.
+- Generate tab: `GeneratePanel`.
+- Other tabs: placeholder panels.
+
+Center area:
+- Viewer header with preview quality/fit, safe area guides, fullscreen.
+- Canvas with video/image playback and caption overlay.
+- Playback bar with play/pause, frame step, playhead time, active transcript word.
+
+Inspector:
+- Empty state when no clip selected.
+- Clip inspector: transform, opacity, audio gain/mute, speed.
+- Project history + audit trail notes.
+
+Timeline:
+- Toolbar: select/blade tools, split, ripple, add tracks, duplicate.
+- Zoom controls + fit.
+- Track labels with lock/mute-or-visible controls.
+- Timeline canvas with clips, drag move/trim, drop-to-insert, playhead.
+
+Footer:
+- Storage status, cloud status, fps/color space/track count, project data button.
+
+Render modal:
+- Preview tab: resolution, frame rate, frame size, video format, sequence/picture duration, estimated frames, render path, progress, footnotes.
+- Editable project tab: manifest description.
+- Export frame action.
+
+Local render:
+- `renderBrowserPreview(...)` renders a browser-generated WebM preview from visible video/image clips only.
+- No audio mixing, captions, graphics, or transitions in this path.
+- No authoritative H.264 MP4 here.
+
+Frame export:
+- `renderFrameToBlob(...)` exports a single PNG still from the viewer frame if a visible video/image clip is active.
+- Browser-dependent; not a full media pipeline.
+
+Keyboard:
+- Space: play/pause
+- Ctrl/Cmd+Z: undo
+- Ctrl/Cmd+Shift+Z: redo
+- S: toggle blade tool
+- Delete/Backspace: delete selected clip
+- Arrow keys: step frame
+- Escape: close context menus/render modal
+
+---
+
+# 8. Transcription and captions
+
+Types:
+- `TranscriptWord`: id, startMs, endMs, text, confidence, speakerId
+- `TranscriptSegment`: id, startMs, endMs, text, speakerId, words
+- `TranscriptSpeaker`: id, label
+- `Transcript`: id, assetId, assetVersion, language, languageSelection, provider, model, status, version, segments, speakers, quality, createdAt, updatedAt
+- `CaptionStyle`: font family/size/weight/position/alignment/colors/stroke/shadow/animation/safe zone
+- `CaptionCue`: id, startMs, endMs, text, speakerId, wordTimings
+- `CaptionTrack`: id, transcriptId, language, aspectRatio, version, style, cues, settings, createdAt
+
+Engine functions:
+- `generateCaptionTrack(transcript, timeline, aspectRatio)` builds cues from transcript words mapped through timeline placements.
+- `exportCaptionTrack(track, format)` returns SRT or WebVTT text.
+- `searchTranscript(transcript, query)` returns matches.
+- `replaceTranscriptSegment(...)`, `renameTranscriptSpeaker(...)` for edits.
+- `remapCaptionsAfterCuts(track, cutRanges, durationMs)` adjusts captions after ripple cuts.
+- `assetVersion(asset)` and transcript quality computation support provenance/quality metadata.
+- `assertTranscript(...)` and `assertCaptionTrack(...)` enforce semantics beyond schema validation.
+
+Manual transcript workflow:
+- User imports a transcript with asset id, language, segments, optional speakers/word timings.
+- Local validation checks language tag, segment count, timestamps, and source asset.
+- Transcript is attached to the asset and versioned/audited locally.
+- Captions can be generated, styled, edited, exported, and remapped after edits.
+
+Agent caption workflow:
+- Agent preview can generate captions as part of a proposal.
+- Commit applies only an approved proposal and checkpoints captions/timeline/audit.
+
+Limitations:
+- Browser audio metadata is treated as metadata, not decoded audio verification.
+- No real speech-to-text provider here yet.
+
+---
+
+# 9. Agent core
+
+Tool registry:
+- `config/tool-registry.json` declares tools:
+  - `project.inspect`
+  - `transcript.manualImport`
+  - `transcript.transcribe`
+  - `transcript.search`
+  - `timeline.preview`
+  - `timeline.commit`
+  - `captions.generate`
+  - `captions.export`
+  - `generation.video`
+- Each tool declares permission, cost class, reversible, approval class, timeout, idempotency, availability.
+
+Orchestrator:
+- `getAgentToolRegistry()` returns tool metadata.
+- `listAgentTools()` returns definitions.
+- `previewAgentRequest(state, request)` builds a local agent run, validates input/output shapes, scopes tool permissions, builds pause-cut operations and/or captions, and returns a previewed run + proposal.
+- `commitAgentProposal(state, input)` validates commit input, checks run/proposal/staleness, revalidates the exact reviewed result, and commits with checkpoint/audit.
+- `makeManualTranscript(...)` builds a validated local transcript.
+- `withTranscript(...)`, `searchStoredTranscript(...)` support transcript lifecycle.
+
+Input/output validation:
+- AJV compiles `$defs` from `agent-tool-input.schema.json` and `agent-tool-output.schema.json`.
+- Tool input/output are validated before use.
+
+Permission scoping:
+- `assertAgentToolPermission(tool, grantedScopes)` throws if tool.permission is not in granted scopes.
+- Used locally for now; server-side authorization is still required for remote tool execution.
+
+Agent run lifecycle:
+- planning → previewed → awaiting_approval → committed/stale/failed
+
+Proposal rules:
+- Operations limited to 100.
+- Commit validates base timeline version and revalidates the exact reviewed result.
+- Commit is rejected if project changed since preview.
+
+Agent UI wiring:
+- `AgentPanel` forwards user actions to orchestrator/UI functions and commits results through `editor.commitAgentState(...)`.
+
+Evaluation corpus:
+- `evals/regression.json` defines 12 categories and 12 cases.
+- `src/lib/agent/evaluations.ts` validates structure, categories, case uniqueness, assertion shape, tool/op references, and outcome values.
+- Corpus is a spec, not an executed evaluator.
+
+---
+
+# 10. Providers and jobs
+
+Capabilities:
+- `ProviderCapability` union covers media generation, editing, camera/style/mask/object ops, audio/video generation, and provider/orchestration capabilities.
+- `taskCapabilities(task)` returns required capabilities per generation task.
+- `isReasoningOrchestrationCapability(...)` helps identify reasoning/orchestration-only capability sets.
+
+Registry:
+- Provider, model, connection records and snapshot types.
+- Helpers for availability, model filtering, capability merging, status/connection status resolution, factory builders.
+
+Routing:
+- `selectProvider(...)` picks provider/model based on required capabilities, reachability, model state, quality profile, and budget/approval reasoning.
+- Provider options include reason, capability ids, status, connection status, cost estimate, fallback support.
+
+Generation request model:
+- Task, prompt, negative prompt, reference asset ids, provider/model, output spec, budget, provider params, createdBy, projectId, workspaceId, timelineVersion.
+
+Cost/budget:
+- Budget allow/approval helpers, ledger aggregation, period cost, currency formatting, provider limit helpers.
+
+Job lifecycle:
+- Statuses: draft, validating, awaiting_approval, queued, submitted, running, completed, failed, cancelled, expired.
+- Allowed transitions defined explicitly.
+- Failure classification maps common provider error text into `JobFailureClass`.
+- Output filters for primary/thumbnail/proxy roles.
+
+Acceptance:
+- Quality criteria, scoring, moderation result, technical metrics, provenance info.
+- Acceptance helpers for approved/passed-moderation/requires-review/critical-flags.
+
+Webhooks:
+- Event types, delivery/processing records, dedup/fingerprinting, known-event and processing-required predicates.
+
+CLI:
+- CLI connector/operation/invocation types, arg sanitization helpers, forbidden shell patterns, idempotency key construction.
+- Policy is explicit; unrestricted shell execution is prohibited.
+
+MCP:
+- Transport/connection/permission/capability types and helpers.
+- Permission profiles range from read-only to admin.
+- Secret refs may be required for HTTP/SSE transports.
+
+Adapters:
+- `MediaProviderAdapter` interface: capabilities, validateRequest, estimateCost, submit, getStatus, cancel, normaliseOutput, optional verifyWebhook.
+- Adapter types are the boundary; no vendor SDK is embedded in editor/contract code.
+
+Current reality:
+- All of the above is foundation/contract code.
+- No real provider credentials, adapters, or job worker runtime exist here yet.
+
+---
+
+# 11. Cloud auth
+
+Frontend cloud context:
+- `CloudProvider` wraps the app and exposes `useCloudRuntime()`.
+- `CloudControls` renders cloud status and cloud-save interaction.
+
+Cloud checkpoint flow:
+- User can explicitly write a cloud checkpoint containing project/timeline/asset metadata only.
+- Source media bytes are never sent.
+- Cloud write requires:
+  - Convex deployment available
+  - Clerk JWT template named `convex`
+  - Trusted active organization `workspaceId` claim
+  - Expected current checkpoint version for conflict safety
+
+Convex auth config:
+- `src/convex/auth.config.ts` expects `CLERK_JWT_ISSUER_DOMAIN` and sets audience `convex`.
+- Auth config is validated in tests.
+
+Convex guards:
+- Owner check
+- Workspace claim check
+- Timeline version check
+- Durable cloud storage key guard
+- Cloud snapshot version guard
+- Project/timeline reference guard
+
+Convex functions:
+- `get` returns project metadata.
+- Cloud snapshot backup flow uses guards + contracts.
+
+Current status:
+- Cloud path is implemented as code/tests only.
+- It is not live in this workspace because no env is set and no Convex deployment/codegen was verified here.
+
+Required wiring for live cloud:
+- `VITE_CLERK_PUBLISHABLE_KEY`
+- `VITE_CONVEX_URL`
+- Convex function env `CLERK_JWT_ISSUER_DOMAIN`
+- Matching Clerk `convex` JWT template
+- Active organization claim with workspace id
+- Convex deployment with deployed functions
+
+---
+
+# 12. QA, error design, and evaluations
+
+Export QA preflight:
+- `runExportPreflight(input)` returns `passed`, `checks`, `blockers`, `warnings`.
+- Checks include:
+  - timeline validation
+  - media present
+  - assets online/durable storage keys
+  - render preset validity
+  - resolution match vs project
+  - supported/export frame rate
+  - audio presence expectation
+  - caption cue bounds
+  - fonts
+  - graphics/caption track compatibility
+  - rights status
+  - consent status
+  - storage availability
+  - budget availability
+- Browser-unmeasurable checks are `unverified`, not `pass`.
+- Invalid timeline fails fast with a single blocker.
+
+User-safe errors:
+- 13 categories with label/message/action/retryable.
+- `classifyUserSafeError(...)` classifies from error text or failure class.
+- Unknown input falls back to `internal_error`.
+- `redactSensitiveText(...)` strips credentials/signed URLs/oversized blobs.
+- `toUserFacingError(...)` returns user-facing shape with optional redacted technical details for authorized callers.
+- `JobFailureClass` → user-safe category mapping included.
+
+Agent evaluations:
+- 12 categories: editing, transcription, generation_routing, cost, rights, consent, timeline_integrity, motion_graphics, audio, rendering, security, provider_failover.
+- Assertions use a strict single-key rule.
+- Tool/op references are validated against the tool registry and edit-command op enum.
+- Corpus validation is structural, not executed.
+
+Known limitations:
+- Preflight and integrity checks are validated in tests but not yet invoked by an authoritative render/export path.
+- Error module is a presentation contract; real provider/render failures do not yet call it in a live path.
+
+---
+
+# 13. Required free-to-acquire list
+
+See `docs/REQUIRED-FREE-TO-ACQUIRE.md` for the full separate list. In short, the only-free items needed to move this toward a live working agent/backend/flow are:
+
+1. A free Convex deployment
+2. A free Clerk app with the matching `convex` JWT template and organization workspace claim
+3. Free env values for the optional cloud path: `VITE_CLERK_PUBLISHABLE_KEY`, `VITE_CONVEX_URL`, and Convex function env `CLERK_JWT_ISSUER_DOMAIN`
+4. Optional: a free object storage account for real private media storage
+5. Optional: a free provider API key only if/when you want to connect a real provider
+6. Optional: a free moderation/safety provider
+7. Optional: a free server-side secret store
+8. Documentation alignment permission for `docs/IMPLEMENTATION-STATUS.md`
+
+Reality check:
+- None of the free items above are currently present in this workspace.
+- The app can still run locally without them.
+
+---
+
+# 14. Next steps and honest blockers
+
+Immediate, low-risk continuation:
+1. Decide whether this handoff is for:
+   - continuing local-editor work,
+   - wiring free cloud/auth,
+   - adding provider/worker foundations,
+   - or aligning documentation.
+2. If cloud/auth is the goal:
+   - set up a free Convex deployment,
+   - set up a free Clerk app with the `convex` JWT template and organization workspace claim,
+   - add the three env values,
+   - deploy/verify Convex functions and auth flow.
+3. If provider/worker is the goal:
+   - implement one real adapter behind the existing `MediaProviderAdapter` interface,
+   - add a durable job queue/run model behind `job.ts`/`generation.ts`,
+   - add budget/approval flow usage,
+   - connect error module to real failures,
+   - connect export preflight to the real render path only when a render worker exists.
+4. If evaluation is the goal:
+   - build/run an evaluator runner that executes prompts and scores behavior against `evals/regression.json`.
+5. If documentation is the goal:
+   - finish and correct `docs/IMPLEMENTATION-STATUS.md` to match the actual checkout.
+
+Honest blockers:
+- No live Convex deployment verified here.
+- No env configured; cloud path is not active here.
+- No provider/worker/moderation/render backend connected.
+- No evaluator runner.
+
+Suggested first verification for any continuation:
+- `bun run typecheck`
+- `bun test`
+- if Convex is touched: codegen + typecheck
+- if cloud is wired: test sign-in/checkpoint flow end to end
+
+Rules for the next agent:
+- Keep JSON Schema and TypeScript contracts aligned.
+- Keep source media immutable.
+- Keep provider/worker/run behavior behind capability-checked adapters and durable jobs before claiming production.
+- Keep secrets out of source, prompts, project/asset JSON, logs, exports, and version history.
+- Keep failing closed on safety/permissions/version conflicts.
+- Do not claim production render/auth/team/queue/vault/storage features until they are implemented and verified.
+
+---
+
+End of bundle.
