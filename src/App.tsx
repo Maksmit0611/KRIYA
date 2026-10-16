@@ -118,7 +118,7 @@ export default function App() {
   useEffect(() => {
     const keydown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
-      if (target && (target.tagName === "INPUT" || target.tagName === "SELECT" || target.isContentEditable)) return;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable)) return;
       const mod = event.metaKey || event.ctrlKey;
       if (event.code === "Space") { event.preventDefault(); setPlaying((value) => !value); }
       else if (mod && event.key.toLowerCase() === "z" && event.shiftKey) { event.preventDefault(); editor.redo(); }

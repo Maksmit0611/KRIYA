@@ -1,0 +1,50 @@
+[
+  {
+    "id": "knowledge.search",
+    "title": "Search editing knowledge",
+    "permission": "read",
+    "status": "ready"
+  },
+  {
+    "id": "project.inspect",
+    "title": "Inspect project metrics",
+    "permission": "read",
+    "status": "ready"
+  },
+  {
+    "id": "edit.split",
+    "title": "Split selected clip",
+    "permission": "preview-approval",
+    "status": "ready"
+  },
+  {
+    "id": "edit.duplicate",
+    "title": "Duplicate selected clip",
+    "permission": "preview-approval",
+    "status": "ready"
+  },
+  {
+    "id": "edit.delete",
+    "title": "Delete selected clip",
+    "permission": "preview-approval",
+    "status": "ready"
+  },
+  {
+    "id": "edit.speed",
+    "title": "Change selected clip speed",
+    "permission": "preview-approval",
+    "status": "ready"
+  },
+  {
+    "id": "memory.manage",
+    "title": "Remember and forget explicit notes",
+    "permission": "user-action",
+    "status": "ready"
+  },
+  {
+    "id": "brain.reason",
+    "title": "Hosted text reasoning",
+    "permission": "external-request-opt-in",
+    "status": "requires-cloud-config"
+  }
+]

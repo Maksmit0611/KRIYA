@@ -10,7 +10,8 @@
     "test": "bun test",
     "convex:codegen": "convex codegen",
     "convex:dev": "convex dev",
-    "convex:check": "convex dev --once"
+    "convex:check": "convex dev --once",
+    "data:refresh": "python3 scripts/acquire_knowledge.py"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.3",

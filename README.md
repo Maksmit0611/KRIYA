@@ -67,10 +67,20 @@ See [`AGENTS.md`](./AGENTS.md) for required architectural and safety rules.
 
 ## Not implemented in this stage
 
-This stage has no server registration/login/password recovery, account/workspace membership or role enforcement; no cloud project sync/collaboration; no resumable signed upload, malware scanning, object storage/CDN, FFprobe, proxy/thumbnail/waveform generation, or worker queue; and no transcription, external AI providers, generation, publishing, or rights/consent service. The initial UX is a single local project. IndexedDB durability is limited by browser quota and browser/device loss.
+The original local editor stage had no server registration/login/password recovery, account/workspace membership or role enforcement; no cloud project sync/collaboration; no resumable signed upload, malware scanning, object storage/CDN, FFprobe, proxy/thumbnail/waveform generation, or worker queue; and no transcription, external AI providers, generation, publishing, or rights/consent service. The initial UX is a single local project. IndexedDB durability is limited by browser quota and browser/device loss.
 
 These are explicit production architecture gaps—not mocked capabilities. Add them as separate server-side services/jobs without changing the project/timeline source-of-truth contracts or leaking credentials into the client.
 
 ## Optional development cloud checkpoints
 
 See [Cloud development setup](docs/CLOUD-DEVELOPMENT.md) for free Convex/Clerk configuration, required environment values, metadata-only save/download and the live verification checklist.
+
+## Agent workspace
+
+Open **Agent** for offline editing knowledge, project charts, explicit memory, skills and approval-gated edit previews. Optional hosted reasoning uses Groq through authenticated Convex actions; it never exposes the API key to the browser. The Knowledge tab accepts private, licensed JSON records when cloud auth is configured.
+
+- [Agent implementation and free setup](docs/AGENT-BRAIN.md)
+- [Acquired data, provenance and licensing](docs/DATA-SOURCES.md)
+- [Freebuff and alternative deployment paths](docs/DEPLOYMENT.md)
+
+The repo includes 30 original knowledge records and 15 acquired CC0 Wikidata definitions, plus JSON response/knowledge schemas and a JSON design system. The model is hosted, not trained or downloaded into this repo. Real cloud operation requires the documented owner account configuration; offline retrieval is available without it.

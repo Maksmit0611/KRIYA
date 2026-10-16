@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KRIYA knowledge record",
+  "type": "object",
+  "required": ["id", "title", "category", "tags", "body", "sourceUrl", "license", "retrievedAt", "reviewStatus"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^(kriya-|wikidata-Q)[a-zA-Z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "category": { "type": "string", "minLength": 1 },
+    "tags": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "body": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "sourceUrl": { "type": "string", "pattern": "^https://" },
+    "license": { "const": "CC0-1.0" },
+    "retrievedAt": { "type": "string", "minLength": 10 },
+    "reviewStatus": { "enum": ["project-authored", "reviewed-entity-match"] }
+  }
+}

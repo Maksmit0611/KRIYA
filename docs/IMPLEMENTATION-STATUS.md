@@ -1,5 +1,9 @@
 # IMPLEMENTATION-STATUS.md
 
+## Current agent extension
+
+The local Stage 5 history below is retained. The new Agent workspace adds offline retrieval from 45 source-backed knowledge records, explicit local/cloud memory, private JSON knowledge imports, JSON skills/provider/design registries, project charts and a Convex-hosted Groq text-reasoning adapter. See [AGENT-BRAIN.md](AGENT-BRAIN.md), [DATA-SOURCES.md](DATA-SOURCES.md) and [DEPLOYMENT.md](DEPLOYMENT.md) for exact capabilities and free setup. Live provider calls, Clerk authentication and Convex persistence remain unverified without owner credentials. This does not implement media generation, transcription or a final render worker.
+
 KRIYA is a human-led, AI-native creative editing platform. Its core promise is that every edit and generated asset remains part of a structured, editable project rather than being flattened into an opaque video file.
 
 This status document tracks the local Stage 5 commitments for the offline edit assistant and the local-first editor foundations checked into this workspace. It is written from the authoring lens in `src/lib/agent/local.ts`: the local agent is an *offline* assistant that previews an edit against the current project and timeline, asks for approval, and only then applies a validated command. It does not call a live model or provider, and it does not generate media.

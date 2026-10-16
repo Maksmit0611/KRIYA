@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "KRIYA Studio",
+  "colors": {
+    "background": "#101113",
+    "surface": "#1a1b1e",
+    "raised": "#232428",
+    "accent": "#d6ff72",
+    "text": "#eeeee8",
+    "muted": "#a1a39c",
+    "border": "#41443a",
+    "warning": "#ffb5a4"
+  },
+  "spacing": {
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px"
+  },
+  "radius": "12px",
+  "motion": {
+    "duration": "180ms",
+    "easing": "cubic-bezier(.2,.8,.2,1)",
+    "reducedMotion": true
+  },
+  "sections": [
+    "Overview",
+    "Knowledge",
+    "Skills",
+    "Memory"
+  ],
+  "typography": {
+    "heading": "var(--display)",
+    "body": "var(--display)",
+    "label": "var(--mono)"
+  }
+}

@@ -1,0 +1,518 @@
+{
+  "schemaVersion": "1.0.0",
+  "license": "CC0-1.0",
+  "records": [
+    {
+      "id": "kriya-split",
+      "title": "Split at the playhead",
+      "category": "timeline",
+      "tags": [
+        "split",
+        "cut",
+        "playhead"
+      ],
+      "body": "A split creates two source-contiguous clips without changing original media. Select a clip and place the playhead inside its duration, then preview the split before applying.",
+      "sourceUrl": "https://docs.blender.org/manual/en/latest/video_editing/edit/montage/strips/editing.html",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-trim",
+      "title": "Trim a clip",
+      "category": "timeline",
+      "tags": [
+        "trim",
+        "edge",
+        "shorten"
+      ],
+      "body": "Trimming changes the referenced source range. Drag an edge within available source media. Check picture and audio sync after shortening a shot.",
+      "sourceUrl": "https://docs.blender.org/manual/en/latest/video_editing/edit/montage/strips/editing.html",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-speed",
+      "title": "Speed and duration",
+      "category": "timeline",
+      "tags": [
+        "speed",
+        "slow",
+        "fast",
+        "duration"
+      ],
+      "body": "Increasing playback speed shortens the visible duration for the same source range. KRIYA previews a selected-clip speed edit through validated commands; inspect neighboring clips for gaps.",
+      "sourceUrl": "https://ffmpeg.org/ffmpeg-filters.html#Timeline-editing",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-duplicate",
+      "title": "Duplicate safely",
+      "category": "timeline",
+      "tags": [
+        "duplicate",
+        "copy",
+        "repeat"
+      ],
+      "body": "A duplicate references the same immutable source media. It is a separate timeline clip. Check its target track, placement and overlap in the preview.",
+      "sourceUrl": "https://docs.blender.org/manual/en/latest/video_editing/edit/montage/strips/editing.html",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-delete",
+      "title": "Delete versus ripple delete",
+      "category": "timeline",
+      "tags": [
+        "delete",
+        "ripple",
+        "gap"
+      ],
+      "body": "Deleting a clip can leave a gap. Ripple deletion shifts later material and can affect synchronization across tracks. The current agent proposes ordinary delete only.",
+      "sourceUrl": "https://docs.blender.org/manual/en/latest/video_editing/edit/montage/strips/editing.html",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-story",
+      "title": "Build a story before effects",
+      "category": "craft",
+      "tags": [
+        "story",
+        "narrative",
+        "structure",
+        "rough"
+      ],
+      "body": "Start with the intended audience and one clear outcome. Assemble a rough beginning, development and ending, then review continuity before adding decorative effects.",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q237893",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-pacing",
+      "title": "Review pacing",
+      "category": "craft",
+      "tags": [
+        "pace",
+        "pacing",
+        "rhythm",
+        "boring"
+      ],
+      "body": "Watch the cut once without editing. Mark moments that repeat information or obscure an action. Adjust shot length deliberately; there is no universally correct cut frequency.",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q237893",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-continuity",
+      "title": "Continuity review",
+      "category": "craft",
+      "tags": [
+        "continuity",
+        "match",
+        "eyeline",
+        "jump"
+      ],
+      "body": "Review screen direction, eyelines and the action around each cut. A deliberate jump cut may suit a style, but accidental spatial or temporal jumps can distract.",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q237893",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-broll",
+      "title": "Use supporting pictures",
+      "category": "craft",
+      "tags": [
+        "broll",
+        "b-roll",
+        "interview",
+        "coverage"
+      ],
+      "body": "Use relevant supporting pictures to explain speech or bridge a visual edit. Keep source provenance and verify permission before adding footage.",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q237893",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-audio",
+      "title": "Check audio continuity",
+      "category": "audio",
+      "tags": [
+        "audio",
+        "sound",
+        "dialogue",
+        "volume"
+      ],
+      "body": "Prioritize intelligible dialogue. Listen across every cut for discontinuities, sudden level changes and missing ambience. Gain changes in this editor are metadata operations; preview export audio support is limited.",
+      "sourceUrl": "https://ffmpeg.org/ffmpeg-filters.html#Audio-Filters",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-gain",
+      "title": "Gain is not loudness normalization",
+      "category": "audio",
+      "tags": [
+        "gain",
+        "loudness",
+        "normalize",
+        "db"
+      ],
+      "body": "Clip gain scales signal amplitude; it is not an integrated loudness measurement. Final loudness and true-peak verification require appropriate audio analysis tools.",
+      "sourceUrl": "https://ffmpeg.org/ffmpeg-filters.html#loudnorm",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-captions",
+      "title": "Readable captions",
+      "category": "accessibility",
+      "tags": [
+        "caption",
+        "subtitle",
+        "accessibility",
+        "transcription"
+      ],
+      "body": "Captions should represent speech and relevant sounds, stay readable and have reviewed timing. KRIYA does not yet run a live transcription service; do not invent a transcript.",
+      "sourceUrl": "https://www.w3.org/WAI/media/av/captions/",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-contrast",
+      "title": "Text contrast",
+      "category": "accessibility",
+      "tags": [
+        "contrast",
+        "text",
+        "readable",
+        "titles"
+      ],
+      "body": "Preview titles against the actual moving background. Use strong contrast and enough reading time. A quiet panel or shadow may help where the background changes.",
+      "sourceUrl": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-aspect",
+      "title": "Aspect ratio and framing",
+      "category": "delivery",
+      "tags": [
+        "aspect",
+        "vertical",
+        "square",
+        "portrait",
+        "landscape"
+      ],
+      "body": "Changing output dimensions changes framing, not the source asset. Review faces, titles and action near the edges in every target format.",
+      "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_concepts",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-fps",
+      "title": "Frame rate and timing",
+      "category": "delivery",
+      "tags": [
+        "fps",
+        "frame",
+        "framerate",
+        "rate"
+      ],
+      "body": "Project frame rate defines the timing grid. Mixing source frame rates can create repeated or dropped pictures; inspect motion instead of assuming a metadata change creates new frames.",
+      "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_concepts",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-containers",
+      "title": "Container versus codec",
+      "category": "delivery",
+      "tags": [
+        "codec",
+        "container",
+        "mp4",
+        "webm",
+        "h264"
+      ],
+      "body": "A container packages tracks; a codec describes how a track is encoded. An MP4 filename alone does not guarantee decoder support. Check the actual track codecs and browser capabilities.",
+      "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Containers",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-export",
+      "title": "Preview versus final render",
+      "category": "delivery",
+      "tags": [
+        "export",
+        "render",
+        "delivery",
+        "webm"
+      ],
+      "body": "KRIYA currently creates a browser canvas WebM picture preview. It is not an authoritative H.264 MP4 render, and it is not a complete audio mix. Keep the editable manifest and originals.",
+      "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-resolution",
+      "title": "Resolution and scaling",
+      "category": "delivery",
+      "tags": [
+        "resolution",
+        "1080",
+        "720",
+        "4k",
+        "scale"
+      ],
+      "body": "Choose dimensions for the delivery target. Enlarging a low-resolution image does not recover missing detail. Inspect the result at its intended viewing size.",
+      "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_concepts",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-color",
+      "title": "Color pipeline limits",
+      "category": "delivery",
+      "tags": [
+        "color",
+        "colour",
+        "rec709",
+        "grading",
+        "hdr"
+      ],
+      "body": "Keep the project color-space assumptions consistent. Browser previews are not a calibrated grading pipeline; do not claim verified HDR delivery or accurate display color from an ordinary preview.",
+      "sourceUrl": "https://ffmpeg.org/ffmpeg-filters.html#colorspace",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-originals",
+      "title": "Protect source originals",
+      "category": "storage",
+      "tags": [
+        "original",
+        "source",
+        "non-destructive",
+        "immutable"
+      ],
+      "body": "Edits reference immutable original media and source ranges. Store derivatives separately and preserve provenance. Never replace the original bytes to implement a timeline edit.",
+      "sourceUrl": "https://github.com/Maksmit0611/KRIYA/blob/main/AGENTS.md",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-backup",
+      "title": "Metadata is not media backup",
+      "category": "storage",
+      "tags": [
+        "backup",
+        "save",
+        "cloud",
+        "storage"
+      ],
+      "body": "Cloud checkpoints and exported manifests contain project metadata, not source media bytes. Browser storage can be lost or evicted. Back up originals independently.",
+      "sourceUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-versions",
+      "title": "Versioned editing",
+      "category": "storage",
+      "tags": [
+        "version",
+        "undo",
+        "redo",
+        "restore"
+      ],
+      "body": "Every agent edit uses the current project ID and timeline version. A proposal becomes stale when timeline or selection changes. Preview again rather than applying an old command.",
+      "sourceUrl": "https://github.com/Maksmit0611/KRIYA/blob/main/AGENTS.md",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-rights",
+      "title": "Check rights before reuse",
+      "category": "rights",
+      "tags": [
+        "rights",
+        "license",
+        "copyright",
+        "permission"
+      ],
+      "body": "Public availability does not establish reuse permission. Record the source, license, attribution requirements and any subject consent. Treat unclear rights as unresolved.",
+      "sourceUrl": "https://creativecommons.org/share-your-work/cclicenses/",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-consent",
+      "title": "People and consent",
+      "category": "rights",
+      "tags": [
+        "consent",
+        "face",
+        "person",
+        "voice",
+        "likeness"
+      ],
+      "body": "Do not infer a person's permission from a publicly accessible image or voice. Obtain documented rights and consent before any future identity-based generation workflow.",
+      "sourceUrl": "https://github.com/Maksmit0611/KRIYA/blob/main/AGENTS.md",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-memory",
+      "title": "Explicit agent memory",
+      "category": "agent",
+      "tags": [
+        "memory",
+        "remember",
+        "forget",
+        "preferences"
+      ],
+      "body": "Store only notes you explicitly want the agent to remember. Local notes stay in this browser; cloud notes are scoped to the signed-in user and active workspace. Delete a note to exclude it from future requests.",
+      "sourceUrl": "https://github.com/Maksmit0611/KRIYA/blob/main/AGENTS.md",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-tools",
+      "title": "Preview before mutation",
+      "category": "agent",
+      "tags": [
+        "tools",
+        "agent",
+        "approval",
+        "safety"
+      ],
+      "body": "The brain can suggest a supported clip operation. It cannot execute shell commands, publish content or modify source media. Preview and explicit approval still gate every edit.",
+      "sourceUrl": "https://github.com/Maksmit0611/KRIYA/blob/main/AGENTS.md",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-private",
+      "title": "Choose what reaches a model",
+      "category": "agent",
+      "tags": [
+        "private",
+        "privacy",
+        "data",
+        "model"
+      ],
+      "body": "Offline advice sends nothing to an external model. Cloud reasoning sends the current question, retrieved knowledge, explicit cloud notes and a numerical project summary. No original video bytes are included.",
+      "sourceUrl": "https://console.groq.com/docs/your-data",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-knowledge",
+      "title": "Knowledge is not model training",
+      "category": "agent",
+      "tags": [
+        "knowledge",
+        "training",
+        "dataset",
+        "rag",
+        "brain"
+      ],
+      "body": "KRIYA retrieves relevant source-backed records and supplies a bounded context to the hosted model. Adding records changes retrievable knowledge; it does not change the model weights or train video generation.",
+      "sourceUrl": "https://console.groq.com/docs/text-chat",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-proxy",
+      "title": "Plan proxy processing",
+      "category": "workflow",
+      "tags": [
+        "proxy",
+        "performance",
+        "large",
+        "slow"
+      ],
+      "body": "For large video, a separate worker can make proxies and thumbnails while retaining the originals. KRIYA has no managed proxy worker yet; a lightweight preview is not a replacement for source media.",
+      "sourceUrl": "https://ffmpeg.org/ffmpeg.html",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    },
+    {
+      "id": "kriya-review",
+      "title": "Final review checklist",
+      "category": "workflow",
+      "tags": [
+        "review",
+        "checklist",
+        "quality",
+        "qc"
+      ],
+      "body": "Review the whole cut for missing media, gaps, bad framing, unintended overlaps and title errors. Then check sound, captions, source rights and target format separately.",
+      "sourceUrl": "https://github.com/Maksmit0611/KRIYA/blob/main/AGENTS.md",
+      "license": "CC0-1.0",
+      "reviewStatus": "project-authored",
+      "retrievedAt": "2026-10-16",
+      "notes": "Original KRIYA guidance; source URL is supporting reference, not copied source prose."
+    }
+  ]
+}
