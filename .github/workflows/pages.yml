@@ -30,6 +30,8 @@ jobs:
       - run: bun run build
         env:
           BASE_PATH: /KRIYA/
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "providers": [
+    {
+      "id": "offline",
+      "capabilities": [
+        "knowledge-retrieval",
+        "project-metrics",
+        "deterministic-edit-preview"
+      ],
+      "requiresKey": false
+    },
+    {
+      "id": "groq",
+      "capabilities": [
+        "text-reasoning",
+        "structured-edit-suggestion"
+      ],
+      "model": "openai/gpt-oss-20b",
+      "requiresKey": true,
+      "env": "GROQ_API_KEY",
+      "serverOnly": true,
+      "freeTier": "quota-limited; owner must retain Free plan",
+      "pricingUrl": "https://console.groq.com/docs/rate-limits"
+    }
+  ]
+}

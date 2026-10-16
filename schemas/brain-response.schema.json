@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KRIYA brain reply",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["answer", "citations", "edit", "speed"],
+  "properties": {
+    "answer": { "type": "string", "minLength": 1, "maxLength": 6000 },
+    "citations": { "type": "array", "maxItems": 8, "uniqueItems": true, "items": { "type": "string", "maxLength": 100 } },
+    "edit": { "enum": ["none", "split", "delete", "duplicate", "speed"] },
+    "speed": { "type": ["number", "null"], "minimum": 0.1, "maximum": 8 }
+  }
+}

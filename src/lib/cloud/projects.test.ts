@@ -1,0 +1,33 @@
+import { expect, test } from "bun:test";
+import { defineTestApp } from "convex-test";
+import schema from "../../convex/schema";
+import * as projects from "../../convex/projects";
+import { createInitialState } from "../project/initial";
+import { checkpointSnapshot } from "./contracts";
+
+const app = defineTestApp({ schema }).defineModules({ projects });
+test("real handlers enforce auth, scope, validation and checkpoint conflicts", async () => {
+  const t = app.createTest();
+  const state = createInitialState();
+  const projectId = state.project.id;
+  const args = { projectId, snapshot: checkpointSnapshot(state, "org_a"), expectedRevision: null };
+  await expect(t.query(app.api.projects.get, { projectId })).rejects.toThrow();
+  await expect(t.mutation(app.api.projects.save, args)).rejects.toThrow();
+  const missing = t.withIdentity({ subject: "user_missing" });
+  await expect(missing.mutation(app.api.projects.save, args)).rejects.toThrow();
+  const a = t.withIdentity({ subject: "user_a", workspaceId: "org_a" });
+  expect(await a.query(app.api.projects.get, { projectId })).toBeNull();
+  expect(await a.mutation(app.api.projects.save, args)).toBe(1);
+  await expect(a.mutation(app.api.projects.save, args)).rejects.toThrow("changed");
+  state.project.name = "Renamed without a timeline edit";
+  const updated = checkpointSnapshot(state, "org_a");
+  expect(await a.mutation(app.api.projects.save, { ...args, snapshot: updated, expectedRevision: 1 })).toBe(2);
+  const b = t.withIdentity({ subject: "user_b", workspaceId: "org_b" });
+  expect(await b.query(app.api.projects.get, { projectId })).toBeNull();
+  await expect(b.mutation(app.api.projects.save, args)).rejects.toThrow("scope");
+  await expect(a.mutation(app.api.projects.save, { ...args, snapshot: "{}", expectedRevision: 2 })).rejects.toThrow();
+  const row = await a.query(app.api.projects.get, { projectId });
+  expect(row?.snapshot).toBe(updated);
+  expect(row?.savedBy).toBe("user_a");
+  expect(row?.revision).toBe(2);
+});

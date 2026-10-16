@@ -1,0 +1,247 @@
+{
+  "schemaVersion": "1.0.0",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+  "records": [
+    {
+      "id": "wikidata-Q119565",
+      "title": "frame rate",
+      "category": "glossary",
+      "tags": [
+        "frame rate"
+      ],
+      "body": "measure of frequency of image frames in video",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q119565",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304734+00:00",
+      "sourceRevision": 2556582884,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q12538706",
+      "title": "display resolution",
+      "category": "glossary",
+      "tags": [
+        "display resolution"
+      ],
+      "body": "number of distinct pixels in each dimension that can be displayed",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q12538706",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304766+00:00",
+      "sourceRevision": 2556073732,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q1330119",
+      "title": "non-linear editing system",
+      "category": "glossary",
+      "tags": [
+        "non-linear editing"
+      ],
+      "body": "form of audio, video, or image editing only possible with computer technology; succeeding technology of linear editing",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q1330119",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304774+00:00",
+      "sourceRevision": 2556870478,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q1441762",
+      "title": "aspect ratio",
+      "category": "glossary",
+      "tags": [
+        "aspect ratio"
+      ],
+      "body": "width/height proportion of an image",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q1441762",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304779+00:00",
+      "sourceRevision": 2529970151,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q166863",
+      "title": "color space",
+      "category": "glossary",
+      "tags": [
+        "color space"
+      ],
+      "body": "standard that defines a specific range of colors",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q166863",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304785+00:00",
+      "sourceRevision": 2517991746,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q1937950",
+      "title": "sound design",
+      "category": "glossary",
+      "tags": [
+        "sound design"
+      ],
+      "body": "art and practice of creating sound tracks",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q1937950",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304790+00:00",
+      "sourceRevision": 2548411898,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q202866",
+      "title": "animated film",
+      "category": "glossary",
+      "tags": [
+        "animated film"
+      ],
+      "body": "film for the cinema, television or computer screen that is made by using drawings, stop motion or computer animation",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q202866",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304795+00:00",
+      "sourceRevision": 2556385379,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q204028",
+      "title": "subtitle",
+      "category": "glossary",
+      "tags": [
+        "subtitle"
+      ],
+      "body": "textual representation of events and speech in motion imagery",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q204028",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304800+00:00",
+      "sourceRevision": 2557317864,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q212633",
+      "title": "Advanced Video Coding",
+      "category": "glossary",
+      "tags": [
+        "H.264"
+      ],
+      "body": "standard for video compression",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q212633",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304804+00:00",
+      "sourceRevision": 2515853100,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q2141393",
+      "title": "match cut",
+      "category": "glossary",
+      "tags": [
+        "match cut"
+      ],
+      "body": "cut from one shot to another where the two shots are matched by the action or subject and subject matter",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q2141393",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304809+00:00",
+      "sourceRevision": 2515949476,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q237893",
+      "title": "film editing",
+      "category": "glossary",
+      "tags": [
+        "film editing"
+      ],
+      "body": "creative and technical post-production processing of film",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q237893",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304816+00:00",
+      "sourceRevision": 2548835577,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q240831",
+      "title": "video codec",
+      "category": "glossary",
+      "tags": [
+        "video codec"
+      ],
+      "body": "apparatus or software that can transform video data into a coded format with different characteristics and/or back",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q240831",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304820+00:00",
+      "sourceRevision": 2553148348,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q309440",
+      "title": "WebM",
+      "category": "glossary",
+      "tags": [
+        "WebM"
+      ],
+      "body": "multimedia container format with VP8 or VP9 video and Vorbis or Opus audio",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q309440",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304826+00:00",
+      "sourceRevision": 2504224731,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q334667",
+      "title": "storyboard",
+      "category": "glossary",
+      "tags": [
+        "storyboard"
+      ],
+      "body": "graphic organizer in the form of illustrations or images displayed in sequence for the purpose of pre-visualizing a story",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q334667",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304831+00:00",
+      "sourceRevision": 2531494379,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    },
+    {
+      "id": "wikidata-Q744083",
+      "title": "jump cut",
+      "category": "glossary",
+      "tags": [
+        "jump cut"
+      ],
+      "body": "cut in film editing in which two sequential shots of the same subject give the impression of a jump forward in time",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q744083",
+      "license": "CC0-1.0",
+      "retrievedAt": "2026-10-16T09:14:46.304836+00:00",
+      "sourceRevision": 2519480039,
+      "sourceSha256": "a9673a93b2b2b527e26c707219b293b9e9a1dbe07cf4cbc6c36d4acd3876ef33",
+      "acquisitionUrl": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q119565%7CQ12538706%7CQ1330119%7CQ1441762%7CQ166863%7CQ1937950%7CQ202866%7CQ204028%7CQ212633%7CQ2141393%7CQ237893%7CQ240831%7CQ309440%7CQ334667%7CQ744083&props=labels%7Cdescriptions%7Cinfo&languages=en&format=json",
+      "reviewStatus": "reviewed-entity-match"
+    }
+  ]
+}

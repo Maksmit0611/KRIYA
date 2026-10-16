@@ -1,0 +1,58 @@
+[
+  {
+    "id": "wikidata",
+    "url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+    "status": "acquired",
+    "recordCount": 15,
+    "license": "CC0-1.0"
+  },
+  {
+    "id": "kriya-original",
+    "url": "https://github.com/Maksmit0611/KRIYA",
+    "status": "authored",
+    "recordCount": 30,
+    "license": "CC0-1.0"
+  },
+  {
+    "id": "mdn",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats",
+    "status": "reference-only",
+    "recordCount": 0,
+    "license": "not redistributed"
+  },
+  {
+    "id": "ffmpeg",
+    "url": "https://ffmpeg.org/ffmpeg-filters.html",
+    "status": "reference-only",
+    "recordCount": 0,
+    "license": "not redistributed"
+  },
+  {
+    "id": "w3c",
+    "url": "https://www.w3.org/WAI/media/av/captions/",
+    "status": "reference-only",
+    "recordCount": 0,
+    "license": "not redistributed"
+  },
+  {
+    "id": "blender",
+    "url": "https://docs.blender.org/manual/en/latest/",
+    "status": "reference-only",
+    "recordCount": 0,
+    "license": "not redistributed"
+  },
+  {
+    "id": "commons",
+    "url": "https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia",
+    "status": "optional-not-acquired",
+    "recordCount": 0,
+    "license": "per-file review required"
+  },
+  {
+    "id": "freesound",
+    "url": "https://freesound.org/help/faq/#licenses",
+    "status": "optional-not-acquired",
+    "recordCount": 0,
+    "license": "per-file review required"
+  }
+]
