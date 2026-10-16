@@ -99,11 +99,15 @@ The local test suite exercises the command envelope, timeline integrity, preview
 - Provider, render, worker, moderation, and async-job backends are not connected here.
 - Production authentication, team roles, resumable cloud uploads, malware scanning, FFprobe/proxy processing, and authoritative MP4 rendering are not claimed here.
 
+## Development cloud path
+
+Repository wiring now includes optional Clerk/Convex providers, organization controls, workspace-scoped checkpoint get/save, server validation and revision conflict guards. See [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) for the audit, environment values and live acceptance checklist. Local typecheck, build and all 18 tests pass, including in-memory Convex handler tests. Cloud deployment, sign-in and end-to-end persistence remain unverified until owner configuration; metadata checkpoints do not back up media.
+
 ## Out of scope for this workspace
 
 Per the project docs, the following remain out of scope for this workspace:
 
-- Live Convex deployment and cloud auth verification
+- Production cloud deployment and production auth verification
 - Provider/render/worker/moderation/async-job/production-auth items
 - Any provider API keys or secrets in source code, project JSON, prompts, logs, exports, or version history
 

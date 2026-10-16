@@ -12,6 +12,7 @@ import { createEditingCommand } from "./lib/project/types";
 import { getOriginalMedia, saveOriginalMedia } from "./lib/project/storage";
 import { inspectUpload } from "./lib/media/inspect";
 import { getBrowserPreviewDuration } from "./lib/media/previewDuration";
+import { CloudCheckpoint } from "./components/CloudCheckpoint";
 import { AgentPanel } from "./components/AgentPanel";
 import type { LocalEditProposal } from "./lib/agent/local";
 
@@ -221,6 +222,7 @@ export default function App() {
         <div className="brand">KRIYA<span className="brand-dot">.</span></div>
         <div className="project-name"><ChevronRight size={13} color="#73757a" /><input aria-label="Project name" value={state.project.name} onChange={(event) => editor.setProjectName(event.target.value)} /><span className="save-status"><i className="save-light" />{editor.saved ? "SAVED" : "SAVING"}</span></div>
         <div className="top-actions">
+          <CloudCheckpoint state={state} ready={editor.ready} />
           <button className="icon-button" title="Undo · Ctrl Z" disabled={!editor.canUndo} onClick={editor.undo}><Undo2 size={15} /></button>
           <button className="icon-button" title="Redo · Ctrl Shift Z" disabled={!editor.canRedo} onClick={editor.redo}><Redo2 size={15} /></button>
           <span className="top-divider" />

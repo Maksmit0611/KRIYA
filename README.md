@@ -70,3 +70,7 @@ See [`AGENTS.md`](./AGENTS.md) for required architectural and safety rules.
 This stage has no server registration/login/password recovery, account/workspace membership or role enforcement; no cloud project sync/collaboration; no resumable signed upload, malware scanning, object storage/CDN, FFprobe, proxy/thumbnail/waveform generation, or worker queue; and no transcription, external AI providers, generation, publishing, or rights/consent service. The initial UX is a single local project. IndexedDB durability is limited by browser quota and browser/device loss.
 
 These are explicit production architecture gaps—not mocked capabilities. Add them as separate server-side services/jobs without changing the project/timeline source-of-truth contracts or leaking credentials into the client.
+
+## Optional development cloud checkpoints
+
+See [Cloud development setup](docs/CLOUD-DEVELOPMENT.md) for free Convex/Clerk configuration, required environment values, metadata-only save/download and the live verification checklist.

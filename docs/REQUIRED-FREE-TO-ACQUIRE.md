@@ -8,6 +8,8 @@ If this project ships without an external service whose free tier is required fo
 
 # Required Free-to-Acquire Items for KRIYA
 
+For the current implementation audit, exact development setup and still-unverified live checks, follow [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md). Earlier workspace/key observations below are historical, not a live environment inventory.
+
 This file is the separate free-only requirements list for this repository. It is intended to be handed to you, or to another agent, so the work can continue toward a live working agent/backend/flow without requiring any paid service or any secrets pasted into chat.
 
 Reality check first:
@@ -26,7 +28,7 @@ What it is:
 - A free Convex backend project so the Convex functions in `src/convex/` can be deployed and verified.
 
 Why KRIYA needs it:
-- `src/convex/projects.ts`, `src/convex/projectGuards.ts`, `src/convex/contracts.ts`, `src/convex/schema.ts`, and the auth config all expect a Convex deployment.
+- `src/convex/projects.ts`, `src/lib/cloud/contracts.ts`, `src/convex/schema.ts`, and the auth config all expect a Convex deployment.
 - The cloud checkpoint path is implemented as code/tests, but it is not deployment-verified in this workspace.
 - Without a Convex deployment, the cloud path remains unverified.
 
