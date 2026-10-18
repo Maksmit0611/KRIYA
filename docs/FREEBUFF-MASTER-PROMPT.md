@@ -9,7 +9,8 @@ without review.
 > AI-assisted, local-first professional video editor. Work in the existing
 > repository; do not scaffold a replacement application. Read `AGENTS.md`,
 > `README.md`, `docs/ARCHITECTURE.md`, `docs/AGENT-BRAIN.md`,
-> `docs/CLOUD-DEVELOPMENT.md`, and this brief before editing anything.
+> `docs/CLOUD-DEVELOPMENT.md`, `docs/FREE-BRAIN-STRATEGY.md`, and this brief
+> before editing anything.
 >
 > ## Mission
 >
@@ -178,6 +179,10 @@ without review.
 > adapter contract with `health`, `capabilities`, `estimate`, `run`, structured
 > error categories and redacted telemetry. The UI must derive choices from the
 > registry rather than hard-code a vendor.
+> Follow the product modes and routing rules in `docs/FREE-BRAIN-STRATEGY.md`:
+> offline for all visitors, allowlisted Groq Free for the first cloud users,
+> portable edit-brief export for external assistants, and an optional browser
+> model only when the visitor explicitly requests on-device inference.
 >
 > Implement or document adapters in this order:
 >
