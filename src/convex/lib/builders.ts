@@ -1,5 +1,5 @@
 import type { ActionBuilder, DataModelFromSchemaDefinition, MutationBuilder, QueryBuilder } from "convex/server";
-import { actionGeneric, internalMutationGeneric, internalQueryGeneric, mutationGeneric, queryGeneric } from "convex/server";
+import { actionGeneric, internalActionGeneric, internalMutationGeneric, internalQueryGeneric, mutationGeneric, queryGeneric } from "convex/server";
 import schema from "../schema";
 export type DataModel = DataModelFromSchemaDefinition<typeof schema>;
 export const query: QueryBuilder<DataModel, "public"> = queryGeneric;
@@ -7,3 +7,4 @@ export const mutation: MutationBuilder<DataModel, "public"> = mutationGeneric;
 export const internalQuery: QueryBuilder<DataModel, "internal"> = internalQueryGeneric;
 export const internalMutation: MutationBuilder<DataModel, "internal"> = internalMutationGeneric;
 export const action: ActionBuilder<DataModel, "public"> = actionGeneric;
+export const internalAction: ActionBuilder<DataModel, "internal"> = internalActionGeneric;

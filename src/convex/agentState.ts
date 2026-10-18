@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery, mutation, query } from "./lib/builders";
 import { requireWorkspace } from "../lib/cloud/contracts";
-import { groqProvider } from "../lib/agent/brain";
+import { providerStatuses } from "../lib/agent/providers";
 
 export const notes = query({ args: {}, handler: async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -28,14 +28,14 @@ export const status = query({ args: {}, handler: async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
   const workspaceId = requireWorkspace(identity);
   const allowed = (process.env.AGENT_ALLOWED_SUBJECTS ?? "").split(",").map((value) => value.trim()).includes(identity!.subject);
-  return { configured: Boolean(process.env.GROQ_API_KEY && process.env.GROQ_FREE_PLAN_CONFIRMED === "true" && allowed), model: groqProvider.model, runs: await ctx.db.query("agentRuns").withIndex("by_scope", (q) => q.eq("workspaceId", workspaceId).eq("owner", identity!.subject)).order("desc").take(20) };
+  return { providers: providerStatuses(allowed), supermemoryConfigured: Boolean(allowed && process.env.SUPERMEMORY_API_KEY), runs: await ctx.db.query("agentRuns").withIndex("by_scope", (q) => q.eq("workspaceId", workspaceId).eq("owner", identity!.subject)).order("desc").take(20) };
 } });
 
 export const context = internalQuery({ args: { workspaceId: v.string(), owner: v.string() }, handler: async (ctx, { workspaceId, owner }) => {
   const notes = await ctx.db.query("agentMemory").withIndex("by_scope", (q) => q.eq("workspaceId", workspaceId).eq("owner", owner)).take(12);
   return notes.map((note) => note.text);
 } });
-export const reserve = internalMutation({ args: { workspaceId: v.string(), owner: v.string() }, handler: async (ctx, { workspaceId, owner }) => {
+export const reserve = internalMutation({ args: { workspaceId: v.string(), owner: v.string(), provider: v.string(), model: v.string() }, handler: async (ctx, { workspaceId, owner, provider, model }) => {
   const now = Date.now();
   const day = new Date(now).toISOString().slice(0, 10);
   const minute = Math.floor(now / 60_000);
@@ -51,9 +51,17 @@ export const reserve = internalMutation({ args: { workspaceId: v.string(), owner
   const rows = await ctx.db.query("agentRuns").withIndex("by_scope", (q) => q.eq("workspaceId", workspaceId).eq("owner", owner)).order("desc").take(101);
   // A bounded activity log; no questions, answers or project media are persisted.
   for (const row of rows.slice(99)) await ctx.db.delete(row._id);
-  return await ctx.db.insert("agentRuns", { workspaceId, owner, createdAt: now, status: "pending", provider: "groq", model: groqProvider.model, inputTokens: 0, outputTokens: 0 });
+  return await ctx.db.insert("agentRuns", { workspaceId, owner, createdAt: now, status: "pending", provider, model, inputTokens: 0, outputTokens: 0 });
 } });
 export const finish = internalMutation({ args: { id: v.id("agentRuns"), success: v.boolean(), inputTokens: v.number(), outputTokens: v.number() }, handler: async (ctx, args) => {
   const row = await ctx.db.get(args.id);
   if (row) await ctx.db.patch(args.id, { status: args.success ? "completed" : "failed", inputTokens: args.inputTokens, outputTokens: args.outputTokens });
 } });
+
+export const insertMemory = internalMutation({ args: { workspaceId: v.string(), owner: v.string(), text: v.string(), externalId: v.optional(v.string()) }, handler: async (ctx, args) => {
+  const existing = await ctx.db.query("agentMemory").withIndex("by_scope", (q) => q.eq("workspaceId", args.workspaceId).eq("owner", args.owner)).take(12);
+  if (existing.length >= 12) throw new Error("Forget a note before adding more (12 maximum).");
+  return await ctx.db.insert("agentMemory", { ...args, createdAt: Date.now() });
+} });
+export const getMemory = internalQuery({ args: { id: v.id("agentMemory") }, handler: async (ctx, { id }) => await ctx.db.get(id) });
+export const deleteMemory = internalMutation({ args: { id: v.id("agentMemory") }, handler: async (ctx, { id }) => { await ctx.db.delete(id); } });
