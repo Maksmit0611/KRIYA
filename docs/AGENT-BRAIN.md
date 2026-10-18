@@ -7,11 +7,11 @@ KRIYA now has a working offline knowledge assistant and an optional hosted langu
 | Layer | Implementation | Operational boundary |
 | --- | --- | --- |
 | Frontend | React editor plus Agent workspace: Overview, Knowledge, Skills, Memory and Edit preview | Existing local editor remains usable without an account |
-| Brain | Groq API adapter using `openai/gpt-oss-20b`, configured in `data/agent/providers.json` | Requires an owner-supplied free-plan API key and live Convex |
+| Brain | Provider adapters for Groq, OpenAI, Anthropic, Gemini and Grok, configured in `data/agent/providers.json` | Groq is the free-first default; every adapter requires an owner key and live Convex |
 | Offline fallback | Deterministic weighted keyword retrieval | Always available; not a language model, no API request |
 | Knowledge | 30 original editing guidance records + 15 acquired CC0 Wikidata definitions | Source links, licenses, revisions and hashes included; no video bytes downloaded |
 | Private knowledge | JSON import, delete, scoped retrieval in Convex | Up to 100 records per user/workspace, 20 per import, 2,000 characters per record |
-| Memory | Explicit add/forget notes in localStorage or Convex | Local notes are a reference brief; cloud notes are supplied to cloud reasoning; no automatic conversation retention |
+| Memory | Explicit add/forget notes in localStorage or Convex; optional Supermemory v5 semantic recall | Only user-saved notes are mirrored; no automatic conversation retention |
 | Skills/tools | JSON registry, knowledge retrieval, numerical project inspection, supported edit proposals | No arbitrary shell, URL fetching, MCP execution or external publishing |
 | Database/backend | Convex checkpoint, memory, private knowledge, quota and activity tables; authenticated queries/mutations/actions | Code and in-memory tests pass; real deployment/auth/model calls need owner configuration |
 | Design | JSON tokens and sections, responsive cards, actual timeline SVG chart, activity list, highlights and reduced-motion-aware animation | Chart values come from project state; activity comes from real recorded cloud runs |
@@ -20,12 +20,12 @@ The hosted request assembles current question + top four relevant knowledge reco
 
 ## Free model choice and alternatives (researched 16 October 2026)
 
-The implemented adapter uses Groq's hosted OpenAI open-weight GPT-OSS 20B model, so model inference runs outside your MacBook. Groq lists the model in its supported catalog and Free-plan limits. Actual limits depend on your organization and can change; check the console. The local app additionally caps calls to 20 per user/day and 3 per minute, and 50 per deployment/day and 6 per minute. Failed attempts consume quota. No automatic retries or paid fallback exist.
+The free-first default uses Groq's hosted OpenAI open-weight GPT-OSS 20B model, so model inference runs outside your MacBook. Groq lists the model in its supported catalog and Free-plan limits. Actual limits depend on your organization and can change; check the console. The app additionally caps calls to 20 per user/day and 3 per minute, and 50 per deployment/day and 6 per minute. Failed attempts consume quota. No automatic retries or paid fallback exist. Other adapters are deliberately unavailable until the owner supplies a key and model and enables the paid-provider kill switch.
 
 | Option | Suitability | Key or limitation |
 | --- | --- | --- |
 | Groq Free plan | Implemented: fast hosted text reasoning, no local GPU | Free API key required; keep account on Free plan; provider quotas apply |
-| Gemini Developer API free tier | Alternative for a later provider adapter | Separate Google AI Studio key; model-specific quotas/eligibility; free-tier content can be used to improve products |
+| Gemini Developer API | Adapter implemented but disabled by default | Separate Google AI Studio key; model-specific quotas/eligibility and data terms apply |
 | Browser/local open models | Possible later offline LLM alternative | Weights and inference consume local memory/compute; not chosen for your cloud preference |
 | Freebuff included models | Useful to build and maintain the repository | Its coding-agent access is not an unrestricted inference API key for KRIYA's visitors |
 
@@ -44,7 +44,14 @@ Then configure these **only in the Convex deployment environment**:
 | `GROQ_API_KEY` | Create a key in your own [Groq console](https://console.groq.com/keys) on the Free plan; never use a `VITE_` prefix |
 | `GROQ_FREE_PLAN_CONFIRMED` | `true` after checking the account has not been upgraded to paid billing |
 | `AGENT_ALLOWED_SUBJECTS` | Comma-separated Clerk user IDs allowed to run cloud reasoning (for example your own user ID); no browser-controlled allowlist |
+| `SUPERMEMORY_API_KEY` | Optional server-only key. Enables opaque user/workspace namespaces for semantic recall of explicit cloud notes |
+| `KRIYA_ENABLE_PAID_PROVIDERS` | Set to `true` only when you deliberately accept provider API billing; omitted/false keeps every non-Groq adapter disabled |
+| Provider key + model | Optional pairs: `OPENAI_API_KEY` + `OPENAI_MODEL`, `ANTHROPIC_API_KEY` + `ANTHROPIC_MODEL`, `GEMINI_API_KEY` + `GEMINI_MODEL`, or `XAI_API_KEY` + `XAI_MODEL` |
 | `CLERK_JWT_ISSUER_DOMAIN` | Same Clerk development app's issuer, as described in the cloud guide |
+
+ChatGPT Plus, Claude Pro, Gemini consumer, and Grok consumer subscriptions are
+not API credentials. Their adapters do nothing until the matching server-only
+API key, model, paid-provider switch, and development-user allowlist are set.
 
 Run `bun install --frozen-lockfile`, `bun run convex:dev` (choose cloud development), then `bun run convex:check` when the environment is ready. Restart/rebuild the frontend after changing `VITE_CLERK_PUBLISHABLE_KEY` or `VITE_CONVEX_URL`. Sign in and choose an organization. Open Agent, select hosted mode, review the data-use checkbox and explicitly send a question. No real credentials are checked in or needed in chat.
 
@@ -67,6 +74,6 @@ See [DATA-SOURCES.md](DATA-SOURCES.md) and `data/knowledge/sources.json` for acq
 - Local notes remain in this browser/project and are not silently uploaded. Offline retrieval can search your loaded private knowledge without contacting the model.
 - Current retrieval is a bounded keyword scorer, not semantic embeddings, a vector database or fine-tuning. The private-record and request limits deliberately keep the first cloud path small and affordable.
 
-Local validation: `bun run typecheck`, `bun test` (27 tests), and production build. In-memory Convex tests cover auth/config/consent rejection, workspace/user isolation, note delete, atomic knowledge import, quota limits, a mocked complete cloud request and checkpoint conflicts. Provider tests use synthetic responses, never real credentials. Browser QA and actual Clerk/Groq/Convex end-to-end verification are separate and must not be inferred from these tests.
+Local validation: `bun run typecheck`, `bun test`, and the production build. In-memory Convex tests cover auth/config/consent rejection, workspace/user isolation, note delete, atomic knowledge import, quota limits, a mocked complete cloud request and checkpoint conflicts. Provider and Supermemory adapter tests use synthetic responses, never real credentials. Browser QA and actual Clerk/provider/Supermemory/Convex end-to-end verification are separate and must not be inferred from these tests.
 
 Live acceptance: deploy Convex; verify sign-in and organization claim; add/delete private notes and knowledge; confirm another user/workspace cannot read them; ask one opted-in model question; inspect a completed run; test a supported edit suggestion and stale preview rejection; revoke provider configuration and confirm offline mode remains useful. Do not claim these live checks passed until they do.

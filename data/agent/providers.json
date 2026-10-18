@@ -12,6 +12,7 @@
     },
     {
       "id": "groq",
+      "label": "Groq",
       "capabilities": [
         "text-reasoning",
         "structured-edit-suggestion"
@@ -22,6 +23,50 @@
       "serverOnly": true,
       "freeTier": "quota-limited; owner must retain Free plan",
       "pricingUrl": "https://console.groq.com/docs/rate-limits"
+    },
+    {
+      "id": "openai",
+      "label": "OpenAI",
+      "capabilities": ["text-reasoning", "structured-edit-suggestion"],
+      "requiresKey": true,
+      "env": "OPENAI_API_KEY",
+      "modelEnv": "OPENAI_MODEL",
+      "serverOnly": true,
+      "enabledBy": "KRIYA_ENABLE_PAID_PROVIDERS=true",
+      "pricingUrl": "https://openai.com/api/pricing/"
+    },
+    {
+      "id": "anthropic",
+      "label": "Anthropic",
+      "capabilities": ["text-reasoning", "structured-edit-suggestion"],
+      "requiresKey": true,
+      "env": "ANTHROPIC_API_KEY",
+      "modelEnv": "ANTHROPIC_MODEL",
+      "serverOnly": true,
+      "enabledBy": "KRIYA_ENABLE_PAID_PROVIDERS=true",
+      "pricingUrl": "https://www.anthropic.com/pricing#api"
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini",
+      "capabilities": ["text-reasoning", "structured-edit-suggestion"],
+      "requiresKey": true,
+      "env": "GEMINI_API_KEY",
+      "modelEnv": "GEMINI_MODEL",
+      "serverOnly": true,
+      "enabledBy": "KRIYA_ENABLE_PAID_PROVIDERS=true",
+      "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "id": "grok",
+      "label": "Grok",
+      "capabilities": ["text-reasoning", "structured-edit-suggestion"],
+      "requiresKey": true,
+      "env": "XAI_API_KEY",
+      "modelEnv": "XAI_MODEL",
+      "serverOnly": true,
+      "enabledBy": "KRIYA_ENABLE_PAID_PROVIDERS=true",
+      "pricingUrl": "https://docs.x.ai/developers/models"
     }
   ]
 }

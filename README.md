@@ -77,7 +77,7 @@ See [Cloud development setup](docs/CLOUD-DEVELOPMENT.md) for free Convex/Clerk c
 
 ## Agent workspace
 
-Open **Agent** for offline editing knowledge, project charts, explicit memory, skills and approval-gated edit previews. Optional hosted reasoning uses Groq through authenticated Convex actions; it never exposes the API key to the browser. The Knowledge tab accepts private, licensed JSON records when cloud auth is configured.
+Open **Agent** for offline editing knowledge, project charts, explicit memory, skills and approval-gated edit previews. Optional hosted reasoning uses Groq by default through authenticated Convex actions; server-only adapters for OpenAI, Anthropic, Gemini, and Grok stay disabled until the owner explicitly configures them. Optional Supermemory v5 recall mirrors only notes the user deliberately saves into an opaque user/workspace namespace. No provider or memory API key is exposed to the browser. The Knowledge tab accepts private, licensed JSON records when cloud auth is configured.
 
 - [Agent implementation and free setup](docs/AGENT-BRAIN.md)
 - [Acquired data, provenance and licensing](docs/DATA-SOURCES.md)

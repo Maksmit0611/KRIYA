@@ -7,7 +7,7 @@ import * as brain from "../../convex/brain";
 import { summarizeProject } from "../agent/brain";
 import { createInitialState } from "../project/initial";
 const app = defineTestApp({ schema }).defineModules({ agentState, agentKnowledge, brain });
-afterEach(() => { delete process.env.GROQ_API_KEY; delete process.env.GROQ_FREE_PLAN_CONFIRMED; delete process.env.AGENT_ALLOWED_SUBJECTS; });
+afterEach(() => { for (const key of ["GROQ_API_KEY", "GROQ_FREE_PLAN_CONFIRMED", "AGENT_ALLOWED_SUBJECTS", "KRIYA_ENABLE_PAID_PROVIDERS", "OPENAI_API_KEY", "OPENAI_MODEL", "SUPERMEMORY_API_KEY"]) delete process.env[key]; });
 
 test("memory is scoped to both authenticated workspace and owner", async () => {
   const t = app.createTest();
@@ -30,7 +30,7 @@ test("memory is scoped to both authenticated workspace and owner", async () => {
 test("cloud brain fails closed before a provider request without consent/config/auth", async () => {
   const t = app.createTest();
   const a = t.withIdentity({ subject: "user_a", workspaceId: "org_a" });
-  const args = { question: "Help with export", summary: summarizeProject(createInitialState()), consent: false };
+  const args = { provider: "groq", question: "Help with export", summary: summarizeProject(createInitialState()), consent: false };
   const originalFetch = globalThis.fetch;
   const fetchSpy = mock(async () => { throw new Error("Unexpected network request"); });
   globalThis.fetch = Object.assign(fetchSpy, { preconnect: () => {} });
@@ -39,14 +39,14 @@ test("cloud brain fails closed before a provider request without consent/config/
     await expect(a.action(app.api.brain.ask, args)).rejects.toThrow("Confirm");
     await expect(a.action(app.api.brain.ask, { ...args, consent: true })).rejects.toThrow("limited");
     process.env.AGENT_ALLOWED_SUBJECTS = "user_a";
-    await expect(a.action(app.api.brain.ask, { ...args, consent: true })).rejects.toThrow("Free-plan");
+    await expect(a.action(app.api.brain.ask, { ...args, consent: true })).rejects.toThrow("not enabled");
     expect(fetchSpy).not.toHaveBeenCalled();
   } finally { globalThis.fetch = originalFetch; }
 });
 
 test("atomic budgets restrict repeated requests and shared usage", async () => {
   const t = app.createTest();
-  const scope = { workspaceId: "org_a", owner: "user_a" };
+  const scope = { workspaceId: "org_a", owner: "user_a", provider: "groq", model: "test-model" };
   await t.mutation(app.internal.agentState.reserve, scope);
   await t.mutation(app.internal.agentState.reserve, scope);
   await t.mutation(app.internal.agentState.reserve, scope);
@@ -71,7 +71,7 @@ test("a complete mocked cloud request uses explicit memory and records only run 
   });
   globalThis.fetch = Object.assign(fetchSpy, { preconnect: () => {} });
   try {
-    const result = await a.action(app.api.brain.ask, { question: "Improve pacing", summary: summarizeProject(createInitialState()), consent: true });
+    const result = await a.action(app.api.brain.ask, { provider: "groq", question: "Improve pacing", summary: summarizeProject(createInitialState()), consent: true });
     expect(result.answer).toBe("Review shot length.");
     const status = await a.query(app.api.agentState.status, {});
     expect(status.runs[0].status).toBe("completed");

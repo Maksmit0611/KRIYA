@@ -46,5 +46,11 @@
     "title": "Hosted text reasoning",
     "permission": "external-request-opt-in",
     "status": "requires-cloud-config"
+  },
+  {
+    "id": "memory.recall",
+    "title": "Recall explicit preferences with Supermemory",
+    "permission": "server-only-user-opt-in",
+    "status": "requires-cloud-config"
   }
 ]

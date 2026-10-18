@@ -2,7 +2,7 @@
 
 ## Current agent extension
 
-The local Stage 5 history below is retained. The new Agent workspace adds offline retrieval from 45 source-backed knowledge records, explicit local/cloud memory, private JSON knowledge imports, JSON skills/provider/design registries, project charts and a Convex-hosted Groq text-reasoning adapter. See [AGENT-BRAIN.md](AGENT-BRAIN.md), [DATA-SOURCES.md](DATA-SOURCES.md) and [DEPLOYMENT.md](DEPLOYMENT.md) for exact capabilities and free setup. Live provider calls, Clerk authentication and Convex persistence remain unverified without owner credentials. This does not implement media generation, transcription or a final render worker.
+The local Stage 5 history below is retained. The Agent workspace adds offline retrieval from 45 source-backed knowledge records, explicit local/cloud memory, private JSON knowledge imports, JSON skills/provider/design registries, project charts, a free-first Groq adapter, disabled-by-default OpenAI/Anthropic/Gemini/Grok adapters, and optional Supermemory v5 recall. See [AGENT-BRAIN.md](AGENT-BRAIN.md), [DATA-SOURCES.md](DATA-SOURCES.md) and [DEPLOYMENT.md](DEPLOYMENT.md) for exact capabilities and free setup. Live provider calls, Supermemory, Clerk authentication and Convex persistence remain unverified without owner credentials. This does not implement media generation, transcription or a final render worker.
 
 KRIYA is a human-led, AI-native creative editing platform. Its core promise is that every edit and generated asset remains part of a structured, editable project rather than being flattened into an opaque video file.
 
