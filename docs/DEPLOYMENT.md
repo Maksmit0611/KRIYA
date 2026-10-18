@@ -28,10 +28,18 @@ Source: [Freebuff project](https://github.com/CodebuffAI/freebuff).
 | --- | --- | --- |
 | GitHub Pages | Static frontend | Existing `.github/workflows/pages.yml`; repository Settings → Pages → Source: GitHub Actions. Public-repo free hosting limits apply. Set the public frontend variables in Actions Variables |
 | Cloudflare Pages | Static frontend | Connect GitHub; build `bun run build`; output `dist`; `BASE_PATH=/`; two public frontend build variables. Keep external Convex backend |
+| Vercel Hobby | Static frontend or a personal development preview | Import GitHub; install `bun install --frozen-lockfile`; build `bun run build`; output `dist`; set only the two public frontend build variables. Its free Hobby plan is for non-commercial personal use, so do not use it as a commercial public product without reviewing the current terms |
 | ChatGPT Sites | A private hosted frontend in this workspace | Same built React assets; optional Convex/Groq still requires owner configuration. Site identity and publishing are managed separately from GitHub |
 | Convex cloud Free plan | Authenticated backend/database and model action | `bun run convex:dev` / `bun run convex:check`; not a general static web frontend host in this setup |
 
 A public commercial application should check the frontend host's terms and service limits before launch. Free tiers are quota-limited; the code cannot guarantee zero spend after an account is upgraded to billing.
+
+For Freebuff-specific build and implementation instructions, use
+[FREEBUFF-MASTER-PROMPT.md](FREEBUFF-MASTER-PROMPT.md). Freebuff can import the
+existing GitHub project, provide a preview and deploy a build, but that does not
+configure KRIYA's separate Convex, Clerk or model-provider accounts. Treat its
+hosted URL as a deployment target, not as permission to put deployment or model
+secrets into the repository.
 
 ## Existing Pages failure
 
